@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#02050d" />
+      <stop offset="62%" stop-color="#091224" />
+      <stop offset="100%" stop-color="#172033" />
+    </linearGradient>
+    <linearGradient id="regolithGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="45%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+    <radialGradient id="metalSphere" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="55%" stop-color="#94a3b8" />
+      <stop offset="100%" stop-color="#334155" />
+    </radialGradient>
+  </defs>
+
+  <!-- Deep Space Starfield -->
+  <rect width="800" height="500" fill="url(#skyGrad)" />
+  <g fill="#e2e8f0" opacity="0.65">
+    <circle cx="85" cy="54" r="1.4" /><circle cx="165" cy="92" r="1" /><circle cx="260" cy="38" r="1.6" />
+    <circle cx="380" cy="64" r="1.1" /><circle cx="510" cy="44" r="1.5" /><circle cx="645" cy="78" r="1.8" />
+    <circle cx="735" cy="48" r="1.2" /><circle cx="120" cy="145" r="1.2" /><circle cx="690" cy="142" r="1.4" />
+  </g>
+
+  <!-- Distant Earth or Lunar Horizon Rim -->
+  <circle cx="675" cy="98" r="26" fill="#1d4ed8" opacity="0.85" />
+  <path d="M660,84 Q678,92 688,108" fill="none" stroke="#93c5fd" stroke-width="5" opacity="0.65" />
+
+  <!-- Lunar Cratered Horizon & Regolith Surface -->
+  <path d="M0,295 Q160,262 330,285 T660,272 L800,288 L800,500 L0,500 Z" fill="url(#regolithGrad)" />
+  <ellipse cx="145" cy="348" rx="68" ry="14" fill="#0f172a" stroke="#475569" stroke-width="1.5" opacity="0.65" />
+  <ellipse cx="655" cy="362" rx="82" ry="16" fill="#0f172a" stroke="#475569" stroke-width="1.5" opacity="0.65" />
+
+  <!-- Telemetry Grid Overlay -->
+  <g stroke="#f59e0b" stroke-opacity="0.12" stroke-width="1">
+    <line x1="0" y1="120" x2="800" y2="120" />
+    <line x1="0" y1="240" x2="800" y2="240" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="200" y1="0" x2="200" y2="500" />
+    <line x1="400" y1="0" x2="400" y2="500" />
+    <line x1="600" y1="0" x2="600" y2="500" />
+  </g>
+
+  
+      <!-- Luna 9 Spherical Capsule + 4 Opened Petal Shields + Whip Antennas -->
+      <g transform="translate(400, 250)">
+        <!-- Shadow -->
+        <ellipse cx="0" cy="65" rx="145" ry="22" fill="#030712" opacity="0.7" />
+        <!-- 4 Opened Petals -->
+        <path d="M-28,25 C-90,10 -135,38 -152,58 C-110,64 -58,52 -20,38 Z" fill="#94a3b8" stroke="#f59e0b" stroke-width="2" />
+        <path d="M28,25 C90,10 135,38 152,58 C110,64 58,52 20,38 Z" fill="#94a3b8" stroke="#f59e0b" stroke-width="2" />
+        <path d="M-18,32 C-60,55 -95,78 -110,92 C-65,88 -25,68 -6,44 Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.5" />
+        <path d="M18,32 C60,55 95,78 110,92 C65,88 25,68 6,44 Z" fill="#64748b" stroke="#cbd5e1" stroke-width="1.5" />
+        <!-- Spherical Hermetic ALS Container -->
+        <circle cx="0" cy="8" r="46" fill="url(#metalSphere)" stroke="#f59e0b" stroke-width="2.5" />
+        <ellipse cx="0" cy="-6" rx="43" ry="12" fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 3" />
+        <!-- Top Panoramic Television Turret -->
+        <rect x="-12" y="-56" width="24" height="22" rx="4" fill="#e2e8f0" stroke="#f59e0b" stroke-width="2" />
+        <circle cx="0" cy="-45" r="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5" />
+        <!-- 4 Whip Rod Antennas -->
+        <line x1="-22" y1="-28" x2="-96" y2="-102" stroke="#f59e0b" stroke-width="2.2" />
+        <line x1="22" y1="-28" x2="96" y2="-102" stroke="#f59e0b" stroke-width="2.2" />
+        <line x1="-12" y1="-34" x2="-52" y2="-118" stroke="#cbd5e1" stroke-width="1.8" />
+        <line x1="12" y1="-34" x2="52" y2="-118" stroke="#cbd5e1" stroke-width="1.8" />
+      </g>
+    
+
+  <!-- Top Telemetry Header Bar -->
+  <rect x="24" y="20" width="752" height="44" rx="8" fill="#050b16" fill-opacity="0.78" stroke="#f59e0b" stroke-opacity="0.45" />
+  <text x="42" y="47" fill="#f59e0b" font-family="monospace" font-size="14" font-weight="bold" letter-spacing="2">LUNA 9 · E-6M #202</text>
+  <text x="756" y="47" fill="#cbd5e1" font-family="monospace" font-size="12" text-anchor="end" letter-spacing="1.5">TEKNİK REKONSTRÜKSİYON ŞEMASI</text>
+
+  <!-- Bottom Telemetry Footer Plate -->
+  <rect x="24" y="412" width="752" height="66" rx="8" fill="#050b16" fill-opacity="0.86" stroke="#334155" />
+  <text x="42" y="439" fill="#f8fafc" font-family="sans-serif" font-size="17" font-weight="bold" letter-spacing="1.5">LUNA 9 ALS LANDER</text>
+  <text x="42" y="463" fill="#94a3b8" font-family="monospace" font-size="13" letter-spacing="1">OCEANUS PROCELLARUM · 7.08°N, 64.37°W</text>
+  <text x="756" y="463" fill="#f59e0b" font-family="monospace" font-size="13" font-weight="bold" text-anchor="end" letter-spacing="1">03 ŞUBAT 1966 · İLK YUMUŞAK İNİŞ</text>
+</svg>

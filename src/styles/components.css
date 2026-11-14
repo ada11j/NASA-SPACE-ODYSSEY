@@ -1,0 +1,67 @@
+﻿.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #e6ecf5;
+  letter-spacing: 0.28em;
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-weight: 400;
+}
+
+.brand-logo__mark {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+.brand-logo__text strong {
+  font-weight: 800;
+  color: #fff;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 2rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  box-shadow: 0 6px 28px rgba(226, 100, 58, 0.4);
+}
+
+.btn--primary:hover {
+  box-shadow: 0 8px 36px rgba(226, 100, 58, 0.65);
+}
+
+.btn--ghost {
+  color: #e6ecf5;
+  background: rgba(10, 18, 38, 0.55);
+  border-color: rgba(200, 215, 240, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.btn--ghost:hover {
+  background: rgba(30, 45, 80, 0.7);
+  border-color: #fff;
+}

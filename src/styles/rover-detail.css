@@ -1,0 +1,650 @@
+/* ---- Rover Detail Dossier Screen ---- */
+
+.rover-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse at 80% 0%, rgba(226, 100, 58, 0.14) 0%, transparent 52%),
+    radial-gradient(ellipse at 15% 100%, rgba(28, 52, 98, 0.32) 0%, transparent 58%),
+    rgba(4, 7, 15, 0.96);
+  backdrop-filter: blur(16px);
+  color: #e6ecf5;
+}
+
+/* Sticky Command Topbar */
+.rover-detail__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(5, 9, 20, 0.88);
+  border-bottom: 1px solid rgba(226, 100, 58, 0.24);
+  backdrop-filter: blur(12px);
+}
+
+.rover-detail__topbarInner {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0.9rem clamp(1rem, 3.5vw, 2.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.rover-detail__backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.58rem 1.15rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+  background: rgba(226, 100, 58, 0.2);
+  border: 1px solid rgba(226, 100, 58, 0.55);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.rover-detail__backBtn:hover,
+.rover-detail__backBtn:focus-visible {
+  background: rgba(226, 100, 58, 0.38);
+  border-color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.rover-detail__switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.rover-detail__switchPill {
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(215, 226, 242, 0.76);
+  background: rgba(14, 23, 44, 0.72);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.rover-detail__switchPill:hover {
+  color: #ffffff;
+  border-color: rgba(226, 100, 58, 0.45);
+}
+
+.rover-detail__switchPill--active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(226, 100, 58, 0.35);
+}
+
+.rover-detail__brandWrap {
+  display: flex;
+  align-items: center;
+}
+
+/* Main Dossier Container */
+.rover-detail__main {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vh, 3.5rem) clamp(1.25rem, 3.5vw, 2.5rem) 4.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5.5vh, 4rem);
+}
+
+/* Hero Section */
+.rover-detail__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  align-items: start;
+}
+
+.rover-detail__heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.rover-detail__badgeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.rover-detail__codeBadge,
+.rover-detail__yearsBadge {
+  padding: 0.28rem 0.72rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  background: rgba(15, 25, 48, 0.85);
+  color: #f0b393;
+  border: 1px solid rgba(226, 100, 58, 0.32);
+}
+
+.rover-detail__yearsBadge {
+  color: #d6e2f5;
+  border-color: rgba(200, 215, 240, 0.22);
+}
+
+.rover-detail__title {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.08;
+  color: #ffffff;
+  text-shadow: 0 0 32px rgba(226, 100, 58, 0.28);
+}
+
+.rover-detail__summaryLead {
+  font-size: clamp(0.98rem, 1.6vw, 1.12rem);
+  line-height: 1.7;
+  color: #d2ddef;
+}
+
+.rover-detail__metaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.rover-detail__metaItem {
+  padding: 0.9rem 1.05rem;
+  border-radius: 0.85rem;
+  background: rgba(11, 18, 35, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.rover-detail__metaItem--wide {
+  grid-column: 1 / -1;
+}
+
+.rover-detail__metaItem dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #e2825c;
+}
+
+.rover-detail__metaItem dd {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #e8eef8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.rover-detail__metaItem dd span {
+  font-size: 0.78rem;
+  color: rgba(198, 210, 230, 0.75);
+}
+
+.rover-detail__heroMedia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rover-detail__imageFrame {
+  border-radius: 1.1rem;
+  overflow: hidden;
+  border: 1px solid rgba(226, 100, 58, 0.35);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.65);
+  background: #070b14;
+}
+
+.rover-detail__image {
+  width: 100%;
+  height: auto;
+  max-height: 27rem;
+  object-fit: cover;
+  display: block;
+}
+
+.rover-detail__imageCaption {
+  font-size: 0.74rem;
+  color: rgba(196, 208, 228, 0.68);
+  text-align: right;
+}
+
+/* Telemetry Metrics Strip */
+.rover-detail__metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.rover-metric-card {
+  padding: 1.15rem 1.25rem;
+  border-radius: 0.95rem;
+  background: linear-gradient(
+    145deg,
+    rgba(18, 28, 52, 0.82) 0%,
+    rgba(10, 16, 30, 0.88) 100%
+  );
+  border: 1px solid rgba(226, 100, 58, 0.26);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.rover-metric-card__label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #f0b393;
+}
+
+.rover-metric-card__value {
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 800;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+.rover-metric-card__sub {
+  font-size: 0.76rem;
+  color: rgba(202, 214, 234, 0.76);
+  line-height: 1.4;
+}
+
+/* Generic Dossier Section */
+.rover-detail__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.rover-detail__sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(200, 215, 240, 0.14);
+}
+
+.rover-detail__sectionIndex {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #e2643a;
+}
+
+.rover-detail__sectionTitle {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+/* 01 · Objective & Legacy */
+.rover-detail__objectiveGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.rover-detail__narrativeCard {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.rover-detail__narrativeCard--accent {
+  border-color: rgba(226, 100, 58, 0.34);
+  background: linear-gradient(
+    160deg,
+    rgba(24, 18, 28, 0.84) 0%,
+    rgba(11, 18, 35, 0.88) 100%
+  );
+}
+
+.rover-detail__cardTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #f0b393;
+}
+
+.rover-detail__narrativeCard h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rover-detail__narrativeCard p {
+  font-size: 0.94rem;
+  line-height: 1.72;
+  color: #cbd7ea;
+}
+
+/* 02 · Technical Specs Grid */
+.rover-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.rover-spec-card {
+  padding: 0.95rem 1.15rem;
+  border-radius: 0.85rem;
+  background: rgba(10, 16, 32, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.rover-spec-card__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #e2825c;
+}
+
+.rover-spec-card__value {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #e8eef8;
+}
+
+/* 03 · Scientific Instruments Grid */
+.rover-instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.rover-instrument-card {
+  padding: 1.2rem 1.25rem;
+  border-radius: 0.95rem;
+  background: rgba(12, 20, 38, 0.8);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: border-color 0.22s ease, transform 0.22s ease;
+}
+
+.rover-instrument-card:hover {
+  border-color: rgba(226, 100, 58, 0.48);
+  transform: translateY(-2px);
+}
+
+.rover-instrument-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rover-instrument-card__code {
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: rgba(226, 100, 58, 0.2);
+  color: #ffb699;
+  border: 1px solid rgba(226, 100, 58, 0.4);
+}
+
+.rover-instrument-card__location {
+  font-size: 0.7rem;
+  color: rgba(196, 209, 230, 0.7);
+}
+
+.rover-instrument-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.rover-instrument-card__desc {
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: #c6d3e7;
+}
+
+/* 04 · Major Discoveries Grid */
+.rover-discoveries-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.rover-discovery-card {
+  padding: 1.3rem 1.4rem;
+  border-radius: 1rem;
+  background: rgba(12, 19, 36, 0.84);
+  border: 1px solid rgba(226, 100, 58, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.rover-discovery-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rover-discovery-card__num {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #e2643a;
+}
+
+.rover-discovery-card__loc {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f0b393;
+}
+
+.rover-discovery-card__title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.rover-discovery-card__desc {
+  font-size: 0.9rem;
+  line-height: 1.68;
+  color: #cbd7ea;
+}
+
+/* 05 · Mission Timeline */
+.rover-timeline {
+  list-style: none;
+  position: relative;
+  margin-left: 0.65rem;
+  padding-left: 1.6rem;
+  border-left: 2px solid rgba(226, 100, 58, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.rover-timeline__item {
+  position: relative;
+}
+
+.rover-timeline__marker {
+  position: absolute;
+  left: -2.02rem;
+  top: 1.1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: #e2643a;
+  box-shadow: 0 0 0 4px rgba(226, 100, 58, 0.2);
+}
+
+.rover-timeline__card {
+  padding: 1.05rem 1.25rem;
+  border-radius: 0.9rem;
+  background: rgba(11, 18, 35, 0.8);
+  border: 1px solid rgba(200, 215, 240, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rover-timeline__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.rover-timeline__sol {
+  padding: 0.18rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: rgba(226, 100, 58, 0.22);
+  color: #ffc2a8;
+}
+
+.rover-timeline__date {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #f0b393;
+}
+
+.rover-timeline__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rover-timeline__desc {
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: #c8d4e8;
+}
+
+/* Bottom Navigation Footer */
+.rover-detail__bottomNav {
+  margin-top: 1rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.rover-detail__neighborBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 0.75rem 1.15rem;
+  border-radius: 0.85rem;
+  font: inherit;
+  color: #e6ecf5;
+  background: rgba(12, 20, 38, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.2);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.rover-detail__neighborBtn--next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.rover-detail__neighborBtn:hover {
+  border-color: rgba(226, 100, 58, 0.55);
+  transform: translateY(-2px);
+}
+
+.rover-detail__neighborHint {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .rover-detail__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .rover-detail__metricsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rover-instruments-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .rover-detail__brandWrap {
+    display: none;
+  }
+
+  .rover-detail__objectiveGrid,
+  .rover-specs-grid,
+  .rover-instruments-grid,
+  .rover-discoveries-grid,
+  .rover-detail__metaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .rover-detail__bottomNav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rover-detail__neighborBtn,
+  .rover-detail__neighborBtn--next {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .rover-detail__metricsGrid {
+    grid-template-columns: 1fr;
+  }
+}

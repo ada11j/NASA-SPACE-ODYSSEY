@@ -1,0 +1,2782 @@
+/* ---- Hero Module Quick-Jump Pills & Footer Links ---- */
+
+.home__nav {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.home__modulePills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+}
+
+.home__modulePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #dce6f7;
+  text-decoration: none;
+  background: rgba(11, 19, 38, 0.72);
+  border: 1px solid rgba(200, 215, 240, 0.25);
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.home__modulePill:hover,
+.home__modulePill:focus-visible {
+  transform: translateY(-2px);
+  border-color: #e2643a;
+  background: rgba(24, 36, 68, 0.88);
+  color: #ffffff;
+}
+
+.home__footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.home__footerLink {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(210, 222, 240, 0.75);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.home__footerLink:hover {
+  color: #ffffff;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   1. INTERACTIVE MARS MAP SECTION
+   ========================================================================== */
+
+.exploration-section--map {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 9, 20, 0.97) 0%,
+    rgba(10, 14, 28, 0.96) 50%,
+    rgba(6, 10, 22, 0.98) 100%
+  );
+  border-top: 1px solid rgba(226, 100, 58, 0.2);
+}
+
+.mars-map-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.84);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+}
+
+.mars-map-toolbar__modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mars-map-mode-btn {
+  padding: 0.58rem 1.05rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: #cfdbe8;
+  background: rgba(16, 26, 48, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mars-map-mode-btn--active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(226, 100, 58, 0.35);
+}
+
+.mars-map-toolbar__rovers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mars-rover-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #dce6f5;
+  background: rgba(14, 22, 42, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mars-rover-chip--active {
+  background: rgba(28, 42, 74, 0.95);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.1);
+}
+
+.mars-rover-chip__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+}
+
+.mars-map-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.mars-map-stage {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: rgba(9, 15, 30, 0.9);
+  border: 1px solid rgba(226, 100, 58, 0.28);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+}
+
+.mars-map-stage__hudTop {
+  padding: 0.9rem 1.2rem;
+  background: rgba(6, 10, 22, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.mars-map-stage__scaleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mars-map-stage__badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.mars-map-stage__sub {
+  font-size: 0.74rem;
+  color: rgba(200, 214, 234, 0.75);
+}
+
+.mars-map-stage__zoomControls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mars-zoom-btn {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.55rem;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(20, 32, 60, 0.88);
+  border: 1px solid rgba(200, 215, 240, 0.25);
+  cursor: pointer;
+}
+
+.mars-zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mars-zoom-btn--reset {
+  font-size: 0.72rem;
+  padding: 0 0.75rem;
+}
+
+.mars-zoom-readout {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #f0b393;
+  min-width: 2.6rem;
+  text-align: center;
+}
+
+.mars-map-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #1a0c08;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.mars-map-viewport--dragging {
+  cursor: grabbing;
+}
+
+.mars-map-canvasTransform {
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 0.08s ease-out;
+}
+
+.mars-map-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mars-map-pin {
+  cursor: pointer;
+}
+
+.mars-map-stage__footer {
+  padding: 0.85rem 1.2rem;
+  background: rgba(6, 10, 22, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.mars-map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.74rem;
+  color: #cbd7ea;
+}
+
+.mars-map-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mars-map-legend__dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+}
+
+.mars-map-legend__dot--landing {
+  background: #ffffff;
+  border: 2px solid #e2643a;
+}
+
+.mars-map-legend__line {
+  width: 1.2rem;
+  height: 0.22rem;
+  border-radius: 999px;
+}
+
+.mars-map-switchAction {
+  padding: 0.48rem 0.95rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  background: rgba(226, 100, 58, 0.24);
+  border: 1px solid rgba(226, 100, 58, 0.55);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mars-map-switchAction:hover {
+  background: rgba(226, 100, 58, 0.42);
+}
+
+/* Map Inspector Card */
+.mars-map-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1.1rem;
+  background: rgba(11, 18, 35, 0.88);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+}
+
+.mars-map-inspector__roverHeader {
+  padding-left: 0.85rem;
+  border-left: 3px solid #f5b841;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mars-map-inspector__roverBadgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mars-map-inspector__colorBadge {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: 1px solid currentColor;
+}
+
+.mars-map-inspector__traverse {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #cfdbe8;
+}
+
+.mars-map-inspector__craterTitle {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.mars-map-inspector__coords {
+  font-size: 0.78rem;
+  color: rgba(202, 214, 234, 0.8);
+}
+
+.mars-map-inspector__waypointList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.mars-map-inspector__sectionLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.mars-map-inspector__StepPills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.mars-waypoint-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.65rem;
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+  color: #d4e0f2;
+  background: rgba(16, 26, 48, 0.72);
+  border: 1px solid rgba(200, 215, 240, 0.14);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mars-waypoint-pill--active {
+  background: rgba(28, 42, 74, 0.95);
+  color: #ffffff;
+}
+
+.mars-waypoint-pill__num {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: rgba(226, 100, 58, 0.28);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mars-discovery-card {
+  padding: 1.05rem;
+  border-radius: 0.9rem;
+  background: rgba(7, 12, 24, 0.88);
+  border: 1px solid rgba(226, 100, 58, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.mars-discovery-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mars-discovery-card__kind {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #e2643a;
+}
+
+.mars-discovery-card__sol {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f0b393;
+}
+
+.mars-discovery-card__title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.mars-discovery-card__coordsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #b8c7de;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mars-discovery-card__summary {
+  font-size: 0.84rem;
+  line-height: 1.58;
+  color: #d0dcef;
+}
+
+.mars-discovery-card__findingBox {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.65rem;
+  background: rgba(226, 100, 58, 0.1);
+  border-left: 3px solid #e2643a;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mars-discovery-card__findingBox span {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.mars-discovery-card__findingBox p {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #e8eef8;
+}
+
+.mars-discovery-card__source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.35rem;
+  font-size: 0.7rem;
+  color: rgba(190, 204, 226, 0.72);
+}
+
+.mars-discovery-card__link {
+  color: #f0b393;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mars-discovery-card__link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   2. NASA PHOTO ARCHIVE SECTION
+   ========================================================================== */
+
+.exploration-section--archive {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 10, 22, 0.98) 0%,
+    rgba(9, 15, 30, 0.96) 50%,
+    rgba(5, 9, 20, 0.98) 100%
+  );
+  border-top: 1px solid rgba(200, 215, 240, 0.14);
+}
+
+.archive-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.15rem 1.3rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.84);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+}
+
+.archive-controls__topRow,
+.archive-controls__bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.archive-rover-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.archive-tab-btn {
+  padding: 0.48rem 0.95rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #cfdbe8;
+  background: rgba(16, 26, 48, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.archive-tab-btn--active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  border-color: transparent;
+}
+
+.archive-select {
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.65rem;
+  font: inherit;
+  font-size: 0.78rem;
+  color: #e6ecf5;
+  background: rgba(15, 24, 46, 0.9);
+  border: 1px solid rgba(200, 215, 240, 0.25);
+}
+
+.archive-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 16rem;
+  display: flex;
+  align-items: center;
+}
+
+.archive-search-input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: 0.7rem;
+  font: inherit;
+  font-size: 0.84rem;
+  color: #ffffff;
+  background: rgba(7, 12, 24, 0.9);
+  border: 1px solid rgba(200, 215, 240, 0.22);
+}
+
+.archive-search-input:focus {
+  outline: 2px solid #e2643a;
+  border-color: transparent;
+}
+
+.archive-search-clear {
+  position: absolute;
+  right: 0.65rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.4rem;
+  font: inherit;
+  font-size: 0.72rem;
+  color: #f0b393;
+  background: rgba(226, 100, 58, 0.18);
+  border: none;
+  cursor: pointer;
+}
+
+.archive-api-btn {
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.7rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  background: rgba(42, 92, 168, 0.45);
+  border: 1px solid rgba(125, 175, 245, 0.45);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.archive-api-btn:hover:not(:disabled) {
+  background: rgba(42, 92, 168, 0.7);
+}
+
+.archive-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.75rem;
+  color: #b8c8e0;
+}
+
+.archive-status-bar__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #34d399;
+  flex-shrink: 0;
+}
+
+.archive-status-bar--loading .archive-status-bar__dot {
+  background: #f5b841;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.archive-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(11, 18, 35, 0.84);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.archive-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(226, 100, 58, 0.48);
+}
+
+.archive-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #060a14;
+  cursor: zoom-in;
+}
+
+.archive-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.archive-card:hover .archive-card__img {
+  transform: scale(1.04);
+}
+
+.archive-card__topBadges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.archive-kind-badge {
+  padding: 0.24rem 0.62rem;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(6px);
+}
+
+.archive-kind-badge--real {
+  background: rgba(16, 118, 78, 0.88);
+  color: #dcfff0;
+  border: 1px solid rgba(110, 231, 183, 0.45);
+}
+
+.archive-kind-badge--illustration {
+  background: rgba(145, 78, 24, 0.88);
+  color: #ffebd6;
+  border: 1px solid rgba(251, 191, 36, 0.45);
+}
+
+.archive-cam-badge {
+  padding: 0.22rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(7, 11, 22, 0.84);
+  color: #f0b393;
+  border: 1px solid rgba(226, 100, 58, 0.35);
+}
+
+.archive-card__zoomHint {
+  position: absolute;
+  bottom: 0.65rem;
+  right: 0.65rem;
+  padding: 0.28rem 0.68rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(6, 10, 20, 0.82);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.archive-card__body {
+  padding: 1.15rem 1.3rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.48rem;
+}
+
+.archive-card__metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+}
+
+.archive-card__rover {
+  font-weight: 700;
+  color: #e2825c;
+}
+
+.archive-card__date {
+  color: rgba(196, 209, 230, 0.76);
+}
+
+.archive-card__title {
+  font-size: 1.06rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.archive-card__camFull {
+  font-size: 0.78rem;
+  color: #bfd2f2;
+}
+
+.archive-card__desc {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: #c6d3e7;
+  flex: 1;
+}
+
+.archive-card__footer {
+  margin-top: 0.45rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.archive-card__credit {
+  font-size: 0.7rem;
+  color: rgba(190, 204, 226, 0.68);
+}
+
+.archive-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.archive-card__expandBtn {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(226, 100, 58, 0.25);
+  border: 1px solid rgba(226, 100, 58, 0.5);
+  cursor: pointer;
+}
+
+.archive-card__sourceLink {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #f0b393;
+  text-decoration: none;
+}
+
+.archive-empty-state {
+  padding: 2.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  background: rgba(11, 18, 35, 0.78);
+  border: 1px dashed rgba(200, 215, 240, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* Lightbox Modal */
+.archive-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(3, 6, 14, 0.92);
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.75rem, 2.5vw, 2rem);
+}
+
+.archive-lightbox__dialog {
+  width: min(100%, 74rem);
+  max-height: 92dvh;
+  overflow-y: auto;
+  border-radius: 1.1rem;
+  background: rgba(9, 15, 30, 0.98);
+  border: 1px solid rgba(226, 100, 58, 0.4);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-lightbox__header {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.archive-lightbox__headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.archive-lightbox__counter {
+  font-size: 0.78rem;
+  color: #cbd7ea;
+}
+
+.archive-lightbox__closeBtn {
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(226, 100, 58, 0.28);
+  border: 1px solid rgba(226, 100, 58, 0.55);
+  cursor: pointer;
+}
+
+.archive-lightbox__content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  gap: 1.5rem;
+  padding: 1.35rem;
+  align-items: start;
+}
+
+.archive-lightbox__imageStage {
+  position: relative;
+  border-radius: 0.85rem;
+  overflow: hidden;
+  background: #04070e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.archive-lightbox__img {
+  width: 100%;
+  max-height: 68dvh;
+  object-fit: contain;
+  display: block;
+}
+
+.archive-lightbox__navBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(8, 14, 28, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+}
+
+.archive-lightbox__navBtn--prev {
+  left: 0.75rem;
+}
+
+.archive-lightbox__navBtn--next {
+  right: 0.75rem;
+}
+
+.archive-lightbox__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.archive-lightbox__mission {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.archive-lightbox__title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.archive-lightbox__specs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(14, 23, 44, 0.8);
+}
+
+.archive-lightbox__specs dt {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #e2825c;
+}
+
+.archive-lightbox__specs dd {
+  font-size: 0.84rem;
+  color: #e8eef8;
+}
+
+.archive-lightbox__description {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: #cbd7ea;
+}
+
+.archive-lightbox__extBtn {
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   3. 3D ROVER INSPECTION LAB SECTION
+   ========================================================================== */
+
+.exploration-section--lab3d {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 9, 20, 0.98) 0%,
+    rgba(11, 18, 36, 0.96) 50%,
+    rgba(6, 10, 22, 0.98) 100%
+  );
+  border-top: 1px solid rgba(226, 100, 58, 0.2);
+}
+
+.lab3d-rover-bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.lab3d-rover-tab {
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  font: inherit;
+  text-align: left;
+  color: #d4e0f2;
+  background: rgba(12, 20, 38, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lab3d-rover-tab strong {
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.lab3d-rover-tab span {
+  font-size: 0.72rem;
+  color: rgba(196, 210, 232, 0.74);
+}
+
+.lab3d-rover-tab--active {
+  background: linear-gradient(145deg, rgba(226, 100, 58, 0.28), rgba(18, 28, 52, 0.92));
+  border-color: #e2643a;
+  box-shadow: 0 8px 26px rgba(226, 100, 58, 0.22);
+}
+
+.lab3d-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.lab3d-viewport-card {
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: rgba(8, 13, 26, 0.92);
+  border: 1px solid rgba(226, 100, 58, 0.3);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.lab3d-viewport-card__hudTop {
+  padding: 0.85rem 1.15rem;
+  background: rgba(5, 9, 18, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.lab3d-schematic-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.lab3d-autorotate-btn {
+  padding: 0.36rem 0.8rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(24, 38, 68, 0.88);
+  border: 1px solid rgba(200, 215, 240, 0.25);
+  cursor: pointer;
+}
+
+.lab3d-canvas-wrap {
+  width: 100%;
+  height: 25rem;
+  background: radial-gradient(circle at 50% 45%, #192642 0%, #070c18 75%);
+  cursor: grab;
+}
+
+.lab3d-canvas-wrap:active {
+  cursor: grabbing;
+}
+
+.lab3d-viewport-card__footer {
+  padding: 0.85rem 1.15rem;
+  background: rgba(5, 9, 18, 0.94);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.lab3d-notice {
+  font-size: 0.74rem;
+  color: #c8d5e8;
+  line-height: 1.45;
+}
+
+.lab3d-scale {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f0b393;
+}
+
+.lab3d-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.lab3d-part-selector {
+  padding: 1.1rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.86);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.lab3d-part-selector__label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.lab3d-part-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.lab3d-part-btn {
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.7rem;
+  font: inherit;
+  text-align: left;
+  color: #d6e2f4;
+  background: rgba(16, 26, 48, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.lab3d-part-btn--active {
+  background: rgba(226, 100, 58, 0.24);
+  border-color: #e2643a;
+  color: #ffffff;
+}
+
+.lab3d-part-btn__code {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #f0b393;
+}
+
+.lab3d-part-btn__name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.lab3d-part-dossier {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: rgba(9, 15, 30, 0.9);
+  border: 1px solid rgba(226, 100, 58, 0.32);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lab3d-part-dossier__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.lab3d-part-dossier__cat {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #e2643a;
+  text-transform: uppercase;
+}
+
+.lab3d-part-dossier__code {
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(226, 100, 58, 0.2);
+  color: #ffd3bf;
+}
+
+.lab3d-part-dossier__title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lab3d-part-dossier__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.lab3d-part-dossier__block span {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.lab3d-part-dossier__block p {
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: #cedaef;
+}
+
+.lab3d-part-dossier__specsBox {
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.7rem;
+  background: rgba(16, 26, 48, 0.85);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.lab3d-part-dossier__specsBox span {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #9bb8e8;
+}
+
+.lab3d-part-dossier__specsBox strong {
+  font-size: 0.82rem;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   4. ROVER COMPARISON LAB SECTION
+   ========================================================================== */
+
+.exploration-section--comparison {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 10, 22, 0.98) 0%,
+    rgba(8, 14, 28, 0.96) 50%,
+    rgba(5, 9, 20, 0.98) 100%
+  );
+  border-top: 1px solid rgba(200, 215, 240, 0.16);
+}
+
+.comparison-selector-bar {
+  padding: 1.1rem 1.3rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.86);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.comparison-selector-bar__rovers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.comparison-selector-bar__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.comparison-check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.comparison-rover-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.48rem 0.9rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #d6e2f4;
+  background: rgba(16, 26, 48, 0.75);
+  border: 1px solid rgba(200, 215, 240, 0.2);
+  cursor: pointer;
+}
+
+.comparison-rover-toggle--active {
+  color: #ffffff;
+  background: rgba(24, 38, 68, 0.94);
+}
+
+.comparison-rover-toggle__check {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1.5px solid currentColor;
+  font-size: 0.68rem;
+  color: #060a14;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comparison-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.comparison-preset-btn {
+  padding: 0.42rem 0.8rem;
+  border-radius: 0.6rem;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #bfd2f2;
+  background: rgba(18, 30, 56, 0.75);
+  border: 1px solid rgba(175, 198, 235, 0.24);
+  cursor: pointer;
+}
+
+.comparison-preset-btn:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Comparison Bar Chart Card */
+.comparison-chart-card {
+  padding: 1.4rem 1.5rem;
+  border-radius: 1.1rem;
+  background: rgba(10, 17, 33, 0.88);
+  border: 1px solid rgba(226, 100, 58, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comparison-chart-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.comparison-chart-card__eyebrow {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #e2643a;
+}
+
+.comparison-chart-card__title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.comparison-chart-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.comparison-chart-tab {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #cbd7ea;
+  background: rgba(16, 26, 48, 0.8);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+  cursor: pointer;
+}
+
+.comparison-chart-tab--active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  border-color: transparent;
+}
+
+.comparison-chart-card__note {
+  font-size: 0.8rem;
+  color: rgba(202, 214, 234, 0.78);
+}
+
+.comparison-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.comparison-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.comparison-bar-row__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.comparison-bar-row__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.comparison-bar-row__name small {
+  font-size: 0.74rem;
+  color: rgba(196, 209, 230, 0.72);
+}
+
+.comparison-bar-row__dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+}
+
+.comparison-bar-row__val {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comparison-ongoing-tag {
+  font-style: normal;
+  font-size: 0.66rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(52, 211, 153, 0.18);
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.comparison-bar-track {
+  width: 100%;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: rgba(6, 10, 20, 0.9);
+  overflow: hidden;
+}
+
+.comparison-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.comparison-bar-row__sub {
+  font-size: 0.74rem;
+  color: rgba(196, 209, 230, 0.75);
+}
+
+/* Comparison Table */
+.comparison-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 1.1rem;
+  background: rgba(9, 15, 30, 0.9);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 46rem;
+  font-size: 0.85rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 0.95rem 1.1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comparison-table thead th {
+  background: rgba(6, 10, 22, 0.95);
+  color: #ffffff;
+}
+
+.comparison-table__criteriaCol {
+  width: 14rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: #f0b393 !important;
+}
+
+.comparison-table__roverHead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.comparison-table__gen {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(196, 209, 230, 0.72);
+}
+
+.comparison-table tbody th {
+  font-weight: 700;
+  color: #f0b393;
+  background: rgba(12, 20, 38, 0.55);
+}
+
+.comparison-table td {
+  color: #dce6f5;
+  line-height: 1.55;
+}
+
+.comparison-table td strong {
+  display: block;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.comparison-table td small {
+  display: block;
+  font-size: 0.76rem;
+  color: rgba(196, 209, 230, 0.76);
+}
+
+.comparison-source-link {
+  color: #f0b393;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.comparison-source-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   5. INTERACTIVE MISSION SIMULATION SECTION
+   ========================================================================== */
+
+.exploration-section--simulation {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 9, 20, 0.98) 0%,
+    rgba(12, 16, 32, 0.96) 50%,
+    rgba(5, 9, 20, 0.98) 100%
+  );
+  border-top: 1px solid rgba(226, 100, 58, 0.22);
+}
+
+.sim-disclaimer {
+  padding: 0.85rem 1.15rem;
+  border-radius: 0.85rem;
+  background: rgba(24, 38, 68, 0.55);
+  border: 1px solid rgba(155, 184, 232, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.sim-disclaimer__badge {
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  background: rgba(155, 184, 232, 0.2);
+  color: #d6e4fa;
+}
+
+.sim-disclaimer p {
+  font-size: 0.8rem;
+  color: #cbd7ea;
+}
+
+.sim-rover-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.sim-rover-tab {
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  font: inherit;
+  text-align: left;
+  color: #d4e0f2;
+  background: rgba(12, 20, 38, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sim-rover-tab strong {
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.sim-rover-tab span {
+  font-size: 0.72rem;
+  color: rgba(196, 210, 232, 0.75);
+}
+
+.sim-rover-tab--active {
+  background: linear-gradient(145deg, rgba(226, 100, 58, 0.28), rgba(18, 28, 52, 0.94));
+  border-color: #e2643a;
+}
+
+.sim-timeline-bar {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.88);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sim-timeline-bar__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.sim-timeline-bar__mission {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f0b393;
+}
+
+.sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sim-ctrl-btn {
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(18, 30, 56, 0.88);
+  border: 1px solid rgba(200, 215, 240, 0.25);
+  cursor: pointer;
+}
+
+.sim-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sim-ctrl-btn--play {
+  background: linear-gradient(135deg, #e2643a, #b8431f);
+  border-color: transparent;
+}
+
+.sim-ctrl-btn--playing {
+  background: rgba(26, 128, 86, 0.88);
+}
+
+.sim-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.sim-stepper__track {
+  width: 100%;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: rgba(6, 10, 20, 0.9);
+  overflow: hidden;
+}
+
+.sim-stepper__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e2643a, #f5b841);
+  transition: width 0.35s ease;
+}
+
+.sim-stepper__nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.6rem;
+}
+
+.sim-step-node {
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.75rem;
+  font: inherit;
+  text-align: left;
+  color: #c8d5e8;
+  background: rgba(15, 24, 46, 0.75);
+  border: 1px solid rgba(200, 215, 240, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.sim-step-node--active {
+  background: rgba(226, 100, 58, 0.22);
+  border-color: #e2643a;
+  color: #ffffff;
+}
+
+.sim-step-node--done {
+  border-color: rgba(245, 184, 65, 0.45);
+}
+
+.sim-step-node__circle {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: rgba(226, 100, 58, 0.3);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sim-step-node__sol {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #f0b393;
+}
+
+.sim-step-node__title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Active Simulation Stage Card */
+.sim-stage-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+  gap: 1.75rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 1.15rem;
+  background: rgba(9, 15, 30, 0.92);
+  border: 1px solid rgba(226, 100, 58, 0.32);
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.6);
+  align-items: start;
+}
+
+.sim-stage-card__contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.sim-stage-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sim-stage-card__phase {
+  padding: 0.24rem 0.68rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: rgba(226, 100, 58, 0.22);
+  color: #ffb899;
+  border: 1px solid rgba(226, 100, 58, 0.45);
+}
+
+.sim-stage-card__solBadge,
+.sim-stage-card__dateBadge {
+  padding: 0.22rem 0.62rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(16, 26, 48, 0.85);
+  color: #f0b393;
+}
+
+.sim-stage-card__dateBadge {
+  color: #d4e0f2;
+}
+
+.sim-stage-card__title {
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sim-stage-card__telemetryStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.7rem;
+  background: rgba(14, 23, 44, 0.82);
+  font-size: 0.78rem;
+  color: #cbd7ea;
+}
+
+.sim-stage-card__narrative {
+  font-size: 0.94rem;
+  line-height: 1.68;
+  color: #dce6f5;
+}
+
+.sim-stage-card__scienceBox {
+  padding: 0.9rem 1.05rem;
+  border-radius: 0.8rem;
+  background: rgba(16, 28, 54, 0.75);
+  border-left: 3px solid #38bdf8;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sim-stage-card__scienceBox span {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #7dd3fc;
+}
+
+.sim-stage-card__scienceBox p {
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: #e2ecf8;
+}
+
+.sim-stage-card__specialAlert {
+  padding: 1rem 1.15rem;
+  border-radius: 0.85rem;
+  background: linear-gradient(
+    145deg,
+    rgba(140, 42, 20, 0.34) 0%,
+    rgba(35, 16, 18, 0.85) 100%
+  );
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sim-stage-card__specialAlert strong {
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  color: #fcd34d;
+}
+
+.sim-stage-card__specialAlert p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #fde68a;
+}
+
+.sim-stage-card__events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sim-stage-card__events span {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #f0b393;
+}
+
+.sim-stage-card__events ul {
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #cbd7ea;
+}
+
+.sim-stage-card__footer {
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+}
+
+.sim-stage-card__sourceText {
+  color: rgba(196, 209, 230, 0.74);
+}
+
+.sim-stage-card__sourceLink {
+  font-weight: 700;
+  color: #f0b393;
+  text-decoration: none;
+}
+
+.sim-stage-card__mediaCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sim-stage-card__imgWrap {
+  position: relative;
+  border-radius: 0.95rem;
+  overflow: hidden;
+  border: 1px solid rgba(226, 100, 58, 0.32);
+  background: #060a14;
+}
+
+.sim-stage-card__img {
+  width: 100%;
+  max-height: 24rem;
+  object-fit: cover;
+  display: block;
+}
+
+.sim-stage-card__imgKind {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: rgba(8, 14, 28, 0.86);
+  color: #f0b393;
+  border: 1px solid rgba(226, 100, 58, 0.4);
+}
+
+.sim-stage-card__caption {
+  font-size: 0.74rem;
+  color: rgba(196, 209, 230, 0.72);
+  text-align: right;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS FOR ALL NEW MODULES
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .mars-map-workspace,
+  .lab3d-workspace,
+  .sim-stage-card,
+  .archive-lightbox__content {
+    grid-template-columns: 1fr;
+  }
+
+  .lab3d-rover-bar,
+  .sim-rover-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .archive-grid,
+  .lab3d-part-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .lab3d-canvas-wrap {
+    height: 20rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .lab3d-rover-bar,
+  .sim-rover-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   6. MARS PIONEERS STRIP (SOJOURNER · INSIGHT · INGENUITY)
+   ========================================================================== */
+
+.mars-pioneers-strip {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-radius: 1.15rem;
+  background: rgba(10, 17, 34, 0.86);
+  border: 1px solid rgba(226, 100, 58, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mars-pioneers-strip__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mars-pioneers-strip__title {
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.mars-pioneers-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.mars-pioneer-card {
+  padding: 1.1rem 1.2rem;
+  border-radius: 0.9rem;
+  background: rgba(15, 24, 46, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.mars-pioneer-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+}
+
+.mars-pioneer-card__tag {
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #f0b393;
+}
+
+.mars-pioneer-card__loc {
+  color: #93c5fd;
+}
+
+.mars-pioneer-card h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.mars-pioneer-card p {
+  font-size: 0.82rem;
+  line-height: 1.58;
+  color: #cbd7ea;
+  flex: 1;
+}
+
+.mars-pioneer-card__links {
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.mars-pioneer-card__links a {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #f0b393;
+  text-decoration: none;
+}
+
+.mars-pioneer-card__links a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   7. EXPANDED LUNAR EXPLORATION & 3D MOON GLOBE
+   ========================================================================== */
+
+.lunar-3d-CommandGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.95fr);
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 3rem;
+}
+
+.lunar-3d-globeCard {
+  border-radius: 1.15rem;
+  overflow: hidden;
+  background: rgba(8, 14, 28, 0.92);
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+}
+
+.lunar-3d-globeCard__toolbar {
+  padding: 0.85rem 1.1rem;
+  background: rgba(5, 10, 20, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.lunar-3d-globeCard__hemisphereBtns,
+.lunar-3d-globeCard__toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.lunar-3d-globeCard__canvasWrap {
+  position: relative;
+  width: 100%;
+  height: 27rem;
+  background: radial-gradient(circle at 50% 48%, #15223b 0%, #050914 76%);
+  cursor: grab;
+}
+
+.lunar-3d-globeCard__canvasWrap:active {
+  cursor: grabbing;
+}
+
+.moon-globe-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.moon-globe-hud {
+  position: absolute;
+  inset: 0.75rem;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.moon-globe-hud__top,
+.moon-globe-hud__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.65rem;
+  background: rgba(4, 8, 18, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+.moon-globe-hud__badge {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #7dd3fc;
+}
+
+.moon-globe-hud__coords {
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: #e2e8f0;
+}
+
+.moon-globe-hud__label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: #94a3b8;
+}
+
+.moon-globe-hud__site {
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+.moon-globe-hud__hint {
+  font-size: 0.68rem;
+  color: #93c5fd;
+}
+
+.lunar-site-pinBar {
+  padding: 0.75rem 1rem;
+  background: rgba(5, 10, 20, 0.94);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.lunar-site-pinBtn {
+  padding: 0.34rem 0.68rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.71rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.lunar-site-pinBtn--active {
+  color: #ffffff;
+  background: rgba(56, 189, 248, 0.22);
+  border-color: #38bdf8;
+}
+
+.lunar-site-pinBtn__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.lunar-3d-inspector {
+  padding: 1.35rem;
+  border-radius: 1.15rem;
+  background: rgba(10, 17, 34, 0.9);
+  border: 1px solid rgba(125, 211, 252, 0.26);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.lunar-3d-inspector__badgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lunar-3d-inspector__colorTag {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: 1px solid currentColor;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.lunar-3d-inspector__hemi {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.lunar-3d-inspector__title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lunar-3d-inspector__site,
+.lunar-3d-inspector__dates {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.lunar-3d-inspector__summary {
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: #dce6f5;
+}
+
+.lunar-3d-inspector__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.lunar-3d-inspector__metricBox {
+  padding: 0.7rem 0.85rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 25, 48, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.lunar-3d-inspector__metricBox span {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #7dd3fc;
+}
+
+.lunar-3d-inspector__metricBox strong {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.lunar-3d-inspector__metricBox small {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.lunar-3d-inspector__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 0.35rem;
+}
+
+.lunar-landmarks-box {
+  margin-top: 0.4rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.lunar-landmarks-box__heading {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #93c5fd;
+}
+
+.lunar-landmarks-box__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 11.5rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.lunar-landmark-item {
+  padding: 0.5rem 0.68rem;
+  border-radius: 0.6rem;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.lunar-landmark-item__top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #f8fafc;
+}
+
+.lunar-landmark-item__top span {
+  font-family: monospace;
+  color: #7dd3fc;
+}
+
+.lunar-landmark-item p {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-top: 0.15rem;
+}
+
+/* Lunar Missions Catalog & Chronology */
+.lunar-missions-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.lunar-missions-catalog__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.lunar-missions-catalog__title {
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lunar-missions-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lunar-card__miniSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.6rem;
+  background: rgba(15, 24, 46, 0.78);
+  font-size: 0.74rem;
+  color: #cbd5e1;
+}
+
+.lunar-chronology-block {
+  padding: 1.75rem;
+  border-radius: 1.2rem;
+  background: rgba(8, 14, 28, 0.88);
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lunar-chronology-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.lunar-chronology-item {
+  padding: 1.1rem;
+  border-radius: 0.9rem;
+  background: rgba(14, 23, 44, 0.84);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.lunar-chronology-item--active {
+  border-color: #38bdf8;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.18);
+}
+
+.lunar-chronology-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.lunar-chronology-item__index {
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  border: 1px solid currentColor;
+}
+
+.lunar-chronology-item__agency {
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+
+.lunar-chronology-item__title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lunar-chronology-item__site {
+  font-size: 0.75rem;
+  color: #93c5fd;
+}
+
+.lunar-chronology-item__outcome {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #cbd5e1;
+  flex: 1;
+}
+
+.lunar-chronology-item__actions {
+  padding-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.lunar-live-photo-btn {
+  padding: 0.42rem 0.85rem;
+  border-radius: 0.6rem;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(37, 99, 235, 0.38);
+  border: 1px solid rgba(96, 165, 250, 0.55);
+  cursor: pointer;
+}
+
+.lunar-detail__sourceLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* ==========================================================================
+   8. BIBLIOGRAPHY / KAYNAKÇA SECTION
+   ========================================================================== */
+
+.exploration-section--references {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 9, 20, 0.98) 0%,
+    rgba(8, 13, 26, 0.98) 100%
+  );
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.references-categories-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.references-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.references-category-block__header {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(200, 215, 240, 0.14);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.references-category-block__code {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #e2825c;
+}
+
+.references-category-block__title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.references-category-block__subtitle {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.references-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.reference-card {
+  padding: 1.2rem 1.35rem;
+  border-radius: 1rem;
+  background: rgba(11, 18, 35, 0.86);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: border-color 0.2s ease;
+}
+
+.reference-card:hover {
+  border-color: rgba(226, 100, 58, 0.48);
+}
+
+.reference-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.reference-card__badge {
+  padding: 0.2rem 0.58rem;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  background: rgba(226, 100, 58, 0.18);
+  color: #f0b393;
+  border: 1px solid rgba(226, 100, 58, 0.35);
+}
+
+.reference-card__access {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.reference-card__title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.reference-card__org {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #93c5fd;
+}
+
+.reference-card__desc {
+  font-size: 0.84rem;
+  line-height: 1.58;
+  color: #cbd5e1;
+  flex: 1;
+}
+
+.reference-card__usedIn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.35rem;
+}
+
+.reference-card__usedInLabel {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+}
+
+.reference-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.reference-card__tagPill {
+  padding: 0.16rem 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.68rem;
+  background: rgba(15, 25, 48, 0.9);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.reference-card__footer {
+  margin-top: 0.35rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reference-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #f0b393;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.reference-card__link:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .lunar-3d-CommandGrid,
+  .mars-pioneers-strip__grid,
+  .lunar-missions-grid,
+  .lunar-chronology-list,
+  .references-grid {
+    grid-template-columns: 1fr;
+  }
+}

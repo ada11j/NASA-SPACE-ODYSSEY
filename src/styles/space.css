@@ -1,0 +1,399 @@
+﻿.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.starfield__layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.starfield__layer--far {
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+.starfield__layer--mid {
+  animation: twinkle 4s ease-in-out infinite 1s;
+}
+
+.starfield__layer--near {
+  animation: twinkle 3s ease-in-out infinite 2s;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* ---- Interactive 3D Mars Hero Scene (Three.js / React Three Fiber) ---- */
+
+.scene-viewport--mars {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  animation: scene-fade-in 1.8s ease-out both;
+}
+
+.scene-viewport--mars:active {
+  cursor: grabbing;
+}
+
+.scene-viewport--mars canvas {
+  display: block;
+  touch-action: none;
+}
+
+@keyframes scene-fade-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Shown while the 3D chunk loads or if WebGL is unavailable. */
+.mars-fallback {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: min(80vw, 72vh);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -46%);
+  background: radial-gradient(circle at 65% 40%, rgba(196, 86, 43, 0.45), rgba(90, 30, 14, 0.25) 55%, transparent 72%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* ---- Hero-Scoped Interactive Mars Overlay, Hotspot Card & Minimalist HUD ---- */
+
+.mars-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100dvh;
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 clamp(0.75rem, 2.5vw, 2rem) 0.7rem;
+}
+
+.mars-hover-pill {
+  position: absolute;
+  top: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(6, 10, 22, 0.88);
+  border: 1px solid rgba(226, 100, 58, 0.55);
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  color: #f8fafc;
+  pointer-events: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+}
+
+.mars-hover-pill__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.mars-hover-pill span {
+  color: #f0b393;
+  font-size: 0.72rem;
+}
+
+/* Selected Hotspot Scientific Info Card */
+.mars-hotspot-card {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(23.5rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 11rem);
+  overflow-y: auto;
+  padding: 1.15rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(7, 12, 24, 0.9);
+  border: 1px solid rgba(226, 100, 58, 0.48);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.78);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  animation: hotspot-slide-in 0.25s ease-out both;
+}
+
+@keyframes hotspot-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-46%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+.mars-hotspot-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mars-hotspot-card__badgeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.mars-hotspot-card__catBadge {
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: 1px solid currentColor;
+  background: rgba(15, 23, 42, 0.75);
+}
+
+.mars-hotspot-card__coords {
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #cbd5e1;
+}
+
+.mars-hotspot-card__closeBtn {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 23, 42, 0.85);
+  color: #f8fafc;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mars-hotspot-card__closeBtn:hover {
+  background: rgba(226, 100, 58, 0.35);
+  border-color: #e2643a;
+}
+
+.mars-hotspot-card__title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.mars-hotspot-card__scale {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #f0b393;
+}
+
+.mars-hotspot-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.mars-hotspot-card__section--science {
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.65rem;
+  background: rgba(15, 25, 48, 0.78);
+  border-left: 3px solid #e2643a;
+}
+
+.mars-hotspot-card__label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #f0b393;
+}
+
+.mars-hotspot-card__section p {
+  font-size: 0.8rem;
+  line-height: 1.54;
+  color: #dbe5f5;
+}
+
+.mars-hotspot-card__footer {
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mars-hotspot-card__sourceLink {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.mars-hotspot-card__sourceLink:hover {
+  text-decoration: underline;
+}
+
+/* Bottom Minimalist HUD Bar */
+.mars-hero-hud {
+  max-width: 72rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(5, 9, 20, 0.78);
+  border: 1px solid rgba(200, 215, 240, 0.16);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.mars-hero-hud__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #cbd5e1;
+}
+
+.mars-hero-hud__dot {
+  width: 0.46rem;
+  height: 0.46rem;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.mars-hero-hud__dot--manual {
+  background: #fb923c;
+  box-shadow: 0 0 8px #fb923c;
+}
+
+.mars-hero-hud__hotspots {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.32rem;
+}
+
+.mars-hotspot-chip {
+  padding: 0.24rem 0.58rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #dbe5f5;
+  background: rgba(15, 24, 46, 0.82);
+  border: 1px solid rgba(200, 215, 240, 0.18);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mars-hotspot-chip:hover {
+  border-color: rgba(226, 100, 58, 0.55);
+  color: #ffffff;
+}
+
+.mars-hotspot-chip--active {
+  background: rgba(226, 100, 58, 0.28);
+  border-color: #e2643a;
+  color: #ffffff;
+}
+
+.mars-hotspot-chip__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+}
+
+.mars-hero-hud__zoomGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+}
+
+.mars-zoom-btn {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #f8fafc;
+  background: rgba(16, 26, 48, 0.9);
+  border: 1px solid rgba(200, 215, 240, 0.24);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+.mars-zoom-btn:hover {
+  background: rgba(226, 100, 58, 0.35);
+  border-color: #e2643a;
+}
+
+.mars-zoom-btn--reset {
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1024px) {
+  .mars-hotspot-card {
+    top: auto;
+    bottom: 5.5rem;
+    right: 1rem;
+    left: 1rem;
+    margin: 0 auto;
+    transform: none;
+    max-height: 44dvh;
+  }
+
+  .mars-hero-hud {
+    border-radius: 0.9rem;
+    justify-content: center;
+  }
+
+  .mars-hero-hud__status {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield__layer,
+  .scene-viewport--mars {
+    animation: none;
+  }
+}
