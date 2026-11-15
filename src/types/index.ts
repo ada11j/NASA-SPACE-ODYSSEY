@@ -44,6 +44,10 @@ export type SectionId =
   | 'mission-simulation'
   | 'lunar-exploration'
   | 'spacecraft-quiz'
+  | 'stories-showcase'
+  | 'meet-the-explorers'
+  | 'explorer-stories'
+  | 'project-showcase'
   | 'references';
 
 /**
@@ -423,4 +427,76 @@ export interface QuizSpacecraftGroup {
   badge: string;
   accentColor: string;
   questions: readonly QuizQuestionItem[];
+}
+
+/**
+ * Identifiers for the four first-person educational explorer stories.
+ */
+export type ExplorerStoryId = 'sojourner' | 'ingenuity' | 'opportunity' | 'apollo-lrv';
+
+export interface ExplorerStoryFact {
+  label: string;
+  value: string;
+}
+
+export interface ExplorerStoryChapter {
+  id: string;
+  chapterNumber: string;
+  heading: string;
+  paragraphs: readonly string[];
+}
+
+export interface ExplorerStoryTimelineEvent {
+  date: string;
+  title: string;
+  detail: string;
+}
+
+export interface ExplorerStoryDiscovery {
+  title: string;
+  summary: string;
+}
+
+export interface ExplorerStoryGlossaryTerm {
+  term: string;
+  explanation: string;
+}
+
+export interface ExplorerStoryScene {
+  id: string;
+  sceneNumber: string;
+  title: string;
+  paragraphs: readonly string[];
+  keyTakeaway: string;
+  learnMoreTitle: string;
+  learnMoreDetail: string;
+  interactionPrompt: string;
+}
+
+export interface ExplorerStoryItem {
+  id: ExplorerStoryId;
+  orderNumber: string;
+  spacecraftName: string;
+  badge: string;
+  badgeTitle: string;
+  badgeSubtitle: string;
+  badgeIcon: string;
+  accentColor: string;
+  title: string;
+  subtitle: string;
+  quote: string;
+  readingTime: string;
+  image: string;
+  imageAlt: string;
+  imageCredit: string;
+  mediaKindLabel: string;
+  quickFacts: readonly ExplorerStoryFact[];
+  chapters: readonly ExplorerStoryChapter[];
+  scenes: readonly ExplorerStoryScene[];
+  timeline: readonly ExplorerStoryTimelineEvent[];
+  discoveries: readonly ExplorerStoryDiscovery[];
+  glossary: readonly ExplorerStoryGlossaryTerm[];
+  relatedRoverId?: RoverId;
+  relatedLunarMissionId?: LunarMissionId;
+  relatedVehicleLabel: string;
 }

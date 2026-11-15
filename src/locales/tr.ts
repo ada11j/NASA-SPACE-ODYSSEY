@@ -8,6 +8,7 @@ import { MISSION_SIMULATION_DATA } from '@/data/missionSimulationData';
 import { LUNAR_MISSIONS, LUNAR_SURFACE_LANDMARKS } from '@/data/lunarMissionsData';
 import { SPACECRAFT_QUIZ_GROUPS } from '@/data/spacecraftQuizData';
 import { REFERENCE_CATEGORIES, REFERENCE_ITEMS } from '@/data/referencesData';
+import { TR_EXPLORER_STORIES } from '@/data/stories/trStoriesData';
 
 export const tr = {
   ui: {
@@ -26,6 +27,7 @@ export const tr = {
         missionSimulation: 'Simülasyon',
         lunarExploration: 'Ay Keşifleri',
         spacecraftQuiz: 'Bilgi Yarışması',
+        stories: 'Hikâyeler',
         references: 'Kaynakça',
       },
     },
@@ -46,7 +48,8 @@ export const tr = {
         missionSimulation: '06 · Görev Simülasyonu',
         lunarExploration: '07 · Ay Keşifleri (Lunar)',
         spacecraftQuiz: '08 · Bilgi Yarışması (10 Soru)',
-        references: '09 · Bilimsel Kaynakça',
+        stories: '09 · Sessiz Kâşiflerin Hikâyeleri',
+        references: '10 · Bilimsel Kaynakça',
       },
       footer: {
         coords: 'MARS YÖRÜNGE HATTI · 225 MİLYON KM',
@@ -488,6 +491,43 @@ export const tr = {
       copyright:
         '© 2026 HVB HORIZON · NASA / JPL-Caltech kamu malı verileri ve açık bilim kaynakları kullanılarak eğitim ve bilim iletişimi amacıyla hazırlanmıştır.',
     },
+    stories: {
+      eyebrow: 'SESSİZ KÂŞİFLERİN HİKÂYELERİ · 09 · BİLİMSEL ANLATI',
+      title: 'THE STORIES OF SILENT EXPLORERS',
+      subtitle: 'Sojourner, Ingenuity, Opportunity ve Apollo Ay Gezgini’nin Kendi Ağzından Keşif Yolculukları',
+      description:
+        'Her görev yalnızca rakamlardan ibaret değildir. Kızıl Gezegende ilk tekerlek izini bırakan minik Sojourner’dan, incecik Mars gökyüzünde 72 kez uçan Ingenuity’ye; 15 yıl yol alan Opportunity’den Ay’da astronotları taşıyan LRV’ye kadar kâşiflerin gerçek hikâyelerini okuyun.',
+      selectorAria: 'Hikâye seçimi',
+      factsCardTitle: 'GÖREV BİLGİ KARTI',
+      glossaryTitle: 'KISA BİLİM SÖZLÜĞÜ',
+      timelineTitle: 'TARİHSEL ZAMAN ÇİZELGESİ',
+      discoveriesTitle: 'ÖNE ÇIKAN BİLİMSEL KEŞİFLER',
+      prevStoryBtn: '← Önceki Hikâye',
+      nextStoryBtn: 'Sonraki Hikâye →',
+      openRelatedVehicleBtn: 'İlgili Aracın Teknik Dosyasını İncele →',
+      detailPanelEyebrow: 'KÂŞİFİN HİKÂYESİ · BİRİNCİ ŞAHIS ANLATIMI',
+      detailReadFullBtn: 'Tam Hikâyeyi Hikâyeler Bölümünde Oku ↗',
+      detailExpandBtn: 'Hikâyeyi Oku',
+      detailCollapseBtn: 'Hikâyeyi Daralt',
+      progressHeading: 'KEŞİF İLERLEMESİ VE ROZETLER',
+      progressCompletedSuffix: 'Macera Tamamlandı',
+      badgeEarnedLabel: 'KAZANILDI',
+      badgeLockedLabel: 'KEŞİF BEKLİYOR',
+      sceneModeLabel: 'Kısa Sahneler',
+      fullStoryModeLabel: 'Tam Hikâye & Sözlük',
+      learnMoreOpen: 'Daha Fazlasını Öğren +',
+      learnMoreClose: 'Açıklamayı Gizle −',
+      prevSceneBtn: '← Önceki Sahne',
+      nextSceneBtn: 'Sonraki Sahne →',
+      soundOffLabel: '🔇 Ses: Kapalı',
+      soundOnLabel: '🔊 Ses: Açık',
+      perfStandardLabel: '✨ Standart 3D',
+      perfLowLabel: '⚡ Sadeleştirilmiş Mod',
+      resetAdventureBtn: '↺ Macerayı Sıfırla',
+      controlsHintDesktop: 'Klavye (WASD / Yön Tuşları) veya Fareyle Etkileşim',
+      controlsHintTouch: 'Dokunmatik Kontroller veya Ekrana Dokunarak Keşfet',
+      adventureCompletedBadge: 'ROZET KAZANILDI!',
+    },
   },
   data: {
     marsHeroHotspots: MARS_HERO_HOTSPOTS,
@@ -501,6 +541,7 @@ export const tr = {
     lunarSurfaceLandmarks: LUNAR_SURFACE_LANDMARKS,
     lunarMissions: LUNAR_MISSIONS,
     spacecraftQuizGroups: SPACECRAFT_QUIZ_GROUPS,
+    explorerStories: TR_EXPLORER_STORIES,
     referenceCategories: REFERENCE_CATEGORIES,
     referenceItems: REFERENCE_ITEMS,
   },

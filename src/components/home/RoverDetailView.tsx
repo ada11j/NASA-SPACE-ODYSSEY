@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
+import { DetailStoryBanner } from '@/components/home/DetailStoryBanner';
 import { useLanguage } from '@/context/LanguageContext';
-import type { MarsRoverItem } from '@/types';
+import type { ExplorerStoryId, MarsRoverItem } from '@/types';
 
 interface RoverDetailViewProps {
   rover: MarsRoverItem;
   onClose: () => void;
   onSelectRover: (rover: MarsRoverItem) => void;
+  onReadFullStory?: (storyId: ExplorerStoryId) => void;
 }
 
 /**
@@ -20,6 +22,7 @@ export function RoverDetailView({
   rover,
   onClose,
   onSelectRover,
+  onReadFullStory,
 }: RoverDetailViewProps) {
   const { lang, t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +49,18 @@ export function RoverDetailView({
   const currentIndex = rovers.findIndex((item) => item.id === rover.id);
   const prevRover = rovers[(currentIndex - 1 + rovers.length) % rovers.length];
   const nextRover = rovers[(currentIndex + 1) % rovers.length];
+
+  const storyIdForRover: ExplorerStoryId | null =
+    rover.id === 'opportunity'
+      ? 'opportunity'
+      : rover.id === 'perseverance'
+        ? 'ingenuity'
+        : rover.id === 'spirit'
+          ? 'sojourner'
+          : null;
+  const relatedStory = storyIdForRover
+    ? t.data.explorerStories.find((s) => s.id === storyIdForRover) ?? null
+    : null;
 
   return (
     <motion.div
@@ -223,6 +238,10 @@ export function RoverDetailView({
             </article>
           </div>
         </section>
+
+        {relatedStory ? (
+          <DetailStoryBanner story={relatedStory} onReadFullStory={onReadFullStory} />
+        ) : null}
 
         {/* 02 · Technical Specifications */}
         <section

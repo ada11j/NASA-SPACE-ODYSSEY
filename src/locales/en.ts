@@ -18,6 +18,7 @@ import {
   EN_REFERENCE_ITEMS,
   EN_SPACECRAFT_QUIZ_GROUPS,
 } from './en/enLunarQuizRefData';
+import { EN_EXPLORER_STORIES } from './en/enStoriesData';
 
 export const en: LocaleBundle = {
   ui: {
@@ -36,6 +37,7 @@ export const en: LocaleBundle = {
         missionSimulation: 'Simulation',
         lunarExploration: 'Lunar Exploration',
         spacecraftQuiz: 'Spacecraft Quiz',
+        stories: 'Stories',
         references: 'References',
       },
     },
@@ -56,7 +58,8 @@ export const en: LocaleBundle = {
         missionSimulation: '06 · Mission Simulation',
         lunarExploration: '07 · Lunar Exploration',
         spacecraftQuiz: '08 · Spacecraft Quiz (10 Qs)',
-        references: '09 · Scientific References',
+        stories: '09 · Stories of Silent Explorers',
+        references: '10 · Scientific References',
       },
       footer: {
         coords: 'MARS ORBITAL TRAJECTORY · 225 MILLION KM',
@@ -498,6 +501,43 @@ export const en: LocaleBundle = {
       copyright:
         '© 2026 HVB HORIZON · Prepared for educational and science communication purposes using NASA / JPL-Caltech public-domain data and open scientific archives.',
     },
+    stories: {
+      eyebrow: 'THE STORIES OF SILENT EXPLORERS · 09 · SCIENCE STORYTELLING',
+      title: 'THE STORIES OF SILENT EXPLORERS',
+      subtitle: 'First-Person Journeys Told by Sojourner, Ingenuity, Opportunity, and the Apollo Lunar Roving Vehicle',
+      description:
+        'Space missions are more than numbers and telemetry. Read the true stories told in the voices of the explorers themselves—from tiny Sojourner leaving the first wheel tracks on Mars to Ingenuity’s 72 flights, Opportunity’s 15-year marathon, and the Apollo Lunar Roving Vehicle.',
+      selectorAria: 'Select a story',
+      factsCardTitle: 'MISSION FACT CARD',
+      glossaryTitle: 'QUICK SCIENCE GLOSSARY',
+      timelineTitle: 'HISTORICAL TIMELINE',
+      discoveriesTitle: 'KEY SCIENTIFIC DISCOVERIES',
+      prevStoryBtn: '← Previous Story',
+      nextStoryBtn: 'Next Story →',
+      openRelatedVehicleBtn: 'Inspect Vehicle Technical Dossier →',
+      detailPanelEyebrow: 'EXPLORER STORY · FIRST-PERSON NARRATIVE',
+      detailReadFullBtn: 'Read Full Story in Stories Section ↗',
+      detailExpandBtn: 'Read Story',
+      detailCollapseBtn: 'Collapse Story',
+      progressHeading: 'EXPLORATION PROGRESS & BADGES',
+      progressCompletedSuffix: 'Adventures Completed',
+      badgeEarnedLabel: 'EARNED',
+      badgeLockedLabel: 'READY TO EXPLORE',
+      sceneModeLabel: 'Short Scenes',
+      fullStoryModeLabel: 'Full Story & Glossary',
+      learnMoreOpen: 'Learn More +',
+      learnMoreClose: 'Hide Details −',
+      prevSceneBtn: '← Previous Scene',
+      nextSceneBtn: 'Next Scene →',
+      soundOffLabel: '🔇 Sound: Off',
+      soundOnLabel: '🔊 Sound: On',
+      perfStandardLabel: '✨ Standard 3D',
+      perfLowLabel: '⚡ Simplified Mode',
+      resetAdventureBtn: '↺ Reset Adventure',
+      controlsHintDesktop: 'Keyboard (WASD / Arrows) or Mouse Interaction',
+      controlsHintTouch: 'Touch Controls or Tap Objects to Explore',
+      adventureCompletedBadge: 'BADGE EARNED!',
+    },
   },
   data: {
     marsHeroHotspots: EN_MARS_HERO_HOTSPOTS,
@@ -511,6 +551,7 @@ export const en: LocaleBundle = {
     lunarSurfaceLandmarks: EN_LUNAR_SURFACE_LANDMARKS,
     lunarMissions: EN_LUNAR_MISSIONS,
     spacecraftQuizGroups: EN_SPACECRAFT_QUIZ_GROUPS,
+    explorerStories: EN_EXPLORER_STORIES,
     referenceCategories: EN_REFERENCE_CATEGORIES,
     referenceItems: EN_REFERENCE_ITEMS,
   },

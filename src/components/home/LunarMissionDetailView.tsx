@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
+import { DetailStoryBanner } from '@/components/home/DetailStoryBanner';
 import { useLanguage } from '@/context/LanguageContext';
-import type { LunarMissionItem } from '@/types';
+import type { ExplorerStoryId, LunarMissionItem } from '@/types';
 
 interface LunarMissionDetailViewProps {
   mission: LunarMissionItem;
   onClose: () => void;
   onSelectMission: (mission: LunarMissionItem) => void;
+  onReadFullStory?: (storyId: ExplorerStoryId) => void;
 }
 
 interface LiveNasaPhotoResult {
@@ -26,6 +28,7 @@ export function LunarMissionDetailView({
   mission,
   onClose,
   onSelectMission,
+  onReadFullStory,
 }: LunarMissionDetailViewProps) {
   const { lang, t } = useLanguage();
   const dUi = t.ui.lunarMissionDetail;
@@ -98,6 +101,14 @@ export function LunarMissionDetailView({
     lunarMissions[(currentIndex - 1 + lunarMissions.length) % lunarMissions.length];
   const nextMission =
     lunarMissions[(currentIndex + 1) % lunarMissions.length];
+
+  const isApolloLrv =
+    mission.id === 'apollo-15-lrv' ||
+    mission.id === 'apollo-16-lrv' ||
+    mission.id === 'apollo-17-lrv';
+  const relatedStory = isApolloLrv
+    ? t.data.explorerStories.find((s) => s.id === 'apollo-lrv') ?? null
+    : null;
 
   return (
     <motion.div
@@ -308,6 +319,10 @@ export function LunarMissionDetailView({
             ))}
           </div>
         </section>
+
+        {relatedStory ? (
+          <DetailStoryBanner story={relatedStory} onReadFullStory={onReadFullStory} />
+        ) : null}
 
         {/* 01 · Mission Objective & Outcome */}
         <section

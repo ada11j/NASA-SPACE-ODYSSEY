@@ -1,36 +1,49 @@
 ﻿import { useCallback, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
+import { ExplorerStoriesSection } from '@/components/home/ExplorerStoriesSection';
 import { LanguageSwitcher } from '@/components/home/LanguageSwitcher';
 import { LunarExplorationSection } from '@/components/home/LunarExplorationSection';
 import { LunarMissionDetailView } from '@/components/home/LunarMissionDetailView';
 import { MarsExplorationSection } from '@/components/home/MarsExplorationSection';
+import { MeetExplorersSection } from '@/components/home/MeetExplorersSection';
 import { MarsMapSection } from '@/components/home/MarsMapSection';
 import { MarsPlanet } from '@/components/home/MarsPlanet';
 import { MissionSimulationSection } from '@/components/home/MissionSimulationSection';
 import { NasaPhotoArchiveSection } from '@/components/home/NasaPhotoArchiveSection';
+import { ProjectShowcaseSection } from '@/components/home/ProjectShowcaseSection';
 import { ReferencesSection } from '@/components/home/ReferencesSection';
 import { Rover3DLabSection } from '@/components/home/Rover3DLabSection';
 import { RoverComparisonSection } from '@/components/home/RoverComparisonSection';
 import { RoverDetailView } from '@/components/home/RoverDetailView';
 import { SpacecraftQuizSection } from '@/components/home/SpacecraftQuizSection';
 import { StarField } from '@/components/home/StarField';
+import { StoriesShowcaseSection } from '@/components/home/StoriesShowcaseSection';
 import { useLanguage } from '@/context/LanguageContext';
-import type { LunarMissionItem, MarsRoverItem, SectionId } from '@/types';
+import type {
+  ExplorerStoryId,
+  LunarMissionId,
+  LunarMissionItem,
+  MarsRoverItem,
+  RoverId,
+  SectionId,
+} from '@/types';
 
 /**
  * Main landing experience of HVB HORIZON with smooth section navigation
  * across Mars Exploration, Interactive Mars Map, NASA Photo Archive,
  * 3D Rover Lab, Comparison Lab, Mission Simulation, Lunar Exploration,
- * and the Scientific Bibliography (Kaynakça).
+ * Explorer Stories, and the Scientific Bibliography (Kaynakça).
  */
 export function HomePage() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [selectedRover, setSelectedRover] = useState<MarsRoverItem | null>(null);
   const [selectedLunarMission, setSelectedLunarMission] = useState<LunarMissionItem | null>(null);
+  const [selectedStoryId, setSelectedStoryId] = useState<ExplorerStoryId>('sojourner');
 
   const navItems: ReadonlyArray<{ id: SectionId; label: string }> = useMemo(
     () => [
+      { id: 'stories-showcase', label: t.ui.nav.links.stories.toUpperCase() },
       { id: 'mars-exploration', label: t.ui.nav.links.marsExploration.toUpperCase() },
       { id: 'mars-map', label: t.ui.nav.links.marsMap.toUpperCase() },
       { id: 'nasa-photo-archive', label: t.ui.nav.links.nasaPhotoArchive.toUpperCase() },
@@ -84,6 +97,34 @@ export function HomePage() {
     setSelectedLunarMission(null);
   }, []);
 
+  const handleOpenRoverById = useCallback(
+    (roverId: RoverId) => {
+      const found = t.data.marsRovers.find((r) => r.id === roverId);
+      if (found) setSelectedRover(found);
+    },
+    [t.data.marsRovers]
+  );
+
+  const handleOpenLunarMissionById = useCallback(
+    (missionId: LunarMissionId) => {
+      const found = t.data.lunarMissions.find((m) => m.id === missionId);
+      if (found) setSelectedLunarMission(found);
+    },
+    [t.data.lunarMissions]
+  );
+
+  const handleJumpToStory = useCallback(
+    (storyId: ExplorerStoryId) => {
+      setSelectedStoryId(storyId);
+      setSelectedRover(null);
+      setSelectedLunarMission(null);
+      window.setTimeout(() => {
+        scrollToSection('explorer-stories');
+      }, 60);
+    },
+    [scrollToSection]
+  );
+
   return (
     <div className="home">
       <StarField />
@@ -132,8 +173,18 @@ export function HomePage() {
 
           <div className="home__actions">
             <a
-              href="#mars-exploration"
+              href="#stories-showcase"
               className="btn btn--primary"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection('stories-showcase');
+              }}
+            >
+              {lang === 'tr' ? '📖 KÂŞİFLERİN HİKÂYELERİ →' : '📖 STORIES OF SILENT EXPLORERS →'}
+            </a>
+            <a
+              href="#mars-exploration"
+              className="btn btn--ghost"
               onClick={(event) => {
                 event.preventDefault();
                 scrollToSection('mars-exploration');
@@ -226,6 +277,16 @@ export function HomePage() {
               🧠 {t.ui.hero.pills.spacecraftQuiz}
             </a>
             <a
+              href="#explorer-stories"
+              className="home__modulePill"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('explorer-stories');
+              }}
+            >
+              📖 {t.ui.hero.pills.stories}
+            </a>
+            <a
               href="#references"
               className="home__modulePill"
               onClick={(e) => {
@@ -243,11 +304,31 @@ export function HomePage() {
         </div>
       </MarsPlanet>
 
-      {/* Scrollable Exploration & Interactive Science Sections */}
+      {/* 1.5. THE STORIES OF SILENT EXPLORERS — CINEMATIC EXHIBITION */}
+      <StoriesShowcaseSection onExploreStory={handleJumpToStory} />
+
+      {/* 2. MARS EXPLORATION */}
       <MarsExplorationSection
         onNavigateToSection={scrollToSection}
         onSelectRover={setSelectedRover}
       />
+
+      {/* 3. MEET THE EXPLORERS */}
+      <MeetExplorersSection
+        selectedStoryId={selectedStoryId}
+        onSelectExplorer={handleJumpToStory}
+      />
+
+      {/* 4. INTERACTIVE 3D ADVENTURES (Story-First 5-Stage Flow) */}
+      <ExplorerStoriesSection
+        selectedStoryId={selectedStoryId}
+        onSelectStoryId={setSelectedStoryId}
+        onNavigateToSection={scrollToSection}
+        onOpenRoverById={handleOpenRoverById}
+        onOpenLunarMissionById={handleOpenLunarMissionById}
+      />
+
+      {/* Additional Interactive Science & Lunar Archives */}
       <MarsMapSection />
       <NasaPhotoArchiveSection />
       <Rover3DLabSection />
@@ -258,6 +339,7 @@ export function HomePage() {
         onSelectLunarMission={setSelectedLunarMission}
       />
       <SpacecraftQuizSection onNavigateToSection={scrollToSection} />
+      <ProjectShowcaseSection onNavigateToSection={scrollToSection} />
       <ReferencesSection onNavigateToSection={scrollToSection} />
 
       <footer className="home__footer">
@@ -292,6 +374,7 @@ export function HomePage() {
             rover={activeRover}
             onClose={handleCloseRoverDetail}
             onSelectRover={setSelectedRover}
+            onReadFullStory={handleJumpToStory}
           />
         ) : null}
       </AnimatePresence>
@@ -304,6 +387,7 @@ export function HomePage() {
             mission={activeLunarMission}
             onClose={handleCloseLunarDetail}
             onSelectMission={setSelectedLunarMission}
+            onReadFullStory={handleJumpToStory}
           />
         ) : null}
       </AnimatePresence>
