@@ -1,5 +1,6 @@
-﻿import { Component, lazy, Suspense, useCallback, useState, type ReactNode } from 'react';
-import { MARS_HERO_HOTSPOTS, type MarsHeroHotspot } from '@/data/marsHeroHotspots';
+﻿import { Component, lazy, Suspense, useCallback, useMemo, useState, type ReactNode } from 'react';
+import { type MarsHeroHotspot } from '@/data/marsHeroHotspots';
+import { useLanguage } from '@/context/LanguageContext';
 
 // Lazy-load the 3D scene so the title and buttons render immediately.
 const MarsScene = lazy(() => import('@/scenes/MarsScene'));
@@ -32,6 +33,10 @@ function readEnvironment() {
   };
 }
 
+interface MarsPlanetProps {
+  children?: ReactNode;
+}
+
 /**
  * Interactive Hero Mars:
  * - Real-time 3D sphere (Three.js + React Three Fiber)
@@ -40,10 +45,11 @@ function readEnvironment() {
  * - High-resolution areographically anchored surface features (Olympus Mons, Valles Marineris, Jezero, Polar Caps)
  * - Clickable surface hotspots with scientific dossier card
  */
-export function MarsPlanet() {
+export function MarsPlanet({ children }: MarsPlanetProps) {
+  const { lang, t } = useLanguage();
   const [{ compact, reducedMotion }] = useState(readEnvironment);
-  const [selectedHotspot, setSelectedHotspot] = useState<MarsHeroHotspot | null>(null);
-  const [hoveredHotspot, setHoveredHotspot] = useState<MarsHeroHotspot | null>(null);
+  const [selectedHotspotId, setSelectedHotspotId] = useState<string | null>(null);
+  const [hoveredHotspotId, setHoveredHotspotId] = useState<string | null>(null);
   const [focusTrigger, setFocusTrigger] = useState(0);
   const [isInteracting, setIsInteracting] = useState(false);
   const [zoomCommand, setZoomCommand] = useState<{ step: number; seq: number }>({
@@ -51,13 +57,33 @@ export function MarsPlanet() {
     seq: 0,
   });
 
+  const selectedHotspot = useMemo(
+    () =>
+      selectedHotspotId
+        ? (t.data.marsHeroHotspots.find((h) => h.id === selectedHotspotId) ?? null)
+        : null,
+    [selectedHotspotId, t.data.marsHeroHotspots]
+  );
+
+  const hoveredHotspot = useMemo(
+    () =>
+      hoveredHotspotId
+        ? (t.data.marsHeroHotspots.find((h) => h.id === hoveredHotspotId) ?? null)
+        : null,
+    [hoveredHotspotId, t.data.marsHeroHotspots]
+  );
+
   const handleSelectHotspotFromGlobe = useCallback((hotspot: MarsHeroHotspot) => {
-    setSelectedHotspot((prev) => (prev?.id === hotspot.id ? null : hotspot));
+    setSelectedHotspotId((prev) => (prev === hotspot.id ? null : hotspot.id));
   }, []);
 
   const handleSelectHotspotFromHud = useCallback((hotspot: MarsHeroHotspot) => {
-    setSelectedHotspot(hotspot);
+    setSelectedHotspotId(hotspot.id);
     setFocusTrigger((c) => c + 1);
+  }, []);
+
+  const handleHoverHotspot = useCallback((hotspot: MarsHeroHotspot | null) => {
+    setHoveredHotspotId(hotspot?.id ?? null);
   }, []);
 
   const triggerZoom = useCallback((step: number) => {
@@ -78,14 +104,19 @@ export function MarsPlanet() {
             focusTrigger={focusTrigger}
             zoomCommand={zoomCommand}
             onSelectHotspot={handleSelectHotspotFromGlobe}
-            onHoverHotspot={setHoveredHotspot}
+            onHoverHotspot={handleHoverHotspot}
             onInteractionStateChange={setIsInteracting}
           />
         </Suspense>
       </SceneErrorBoundary>
 
-      {/* Hero-scoped Interactive Controls & Hotspot Info Overlay */}
-      <div className="mars-hero-overlay" aria-label="İnteraktif 3D Mars Kontrolleri ve Bilgi Noktaları">
+      <div className="home__veil" aria-hidden="true" />
+
+      <div id="hero" className="home__hero">
+        {children}
+
+        {/* Hero-scoped Interactive Controls & Hotspot Info Overlay */}
+        <div className="mars-hero-overlay" aria-label="İnteraktif 3D Mars Kontrolleri ve Bilgi Noktaları">
         {/* Hover Tooltip Pill when pointing at a 3D Hotspot on Mars */}
         {hoveredHotspot && hoveredHotspot.id !== selectedHotspot?.id ? (
           <div className="mars-hover-pill" role="status">
@@ -95,7 +126,9 @@ export function MarsPlanet() {
               aria-hidden="true"
             />
             <strong>{hoveredHotspot.name}</strong>
-            <span>({hoveredHotspot.coordinatesText}) · Tıklayın</span>
+            <span>
+              ({hoveredHotspot.coordinatesText}) · {t.ui.marsPlanet.hoverClickHint}
+            </span>
           </div>
         ) : null}
 
@@ -126,8 +159,8 @@ export function MarsPlanet() {
               <button
                 type="button"
                 className="mars-hotspot-card__closeBtn"
-                aria-label="Bölge bilgi kartını kapat"
-                onClick={() => setSelectedHotspot(null)}
+                aria-label={t.ui.marsPlanet.closeCardAria}
+                onClick={() => setSelectedHotspotId(null)}
               >
                 ✕
               </button>
@@ -140,12 +173,16 @@ export function MarsPlanet() {
             <p className="mars-hotspot-card__scale">{selectedHotspot.scaleOrElevation}</p>
 
             <div className="mars-hotspot-card__section">
-              <span className="mars-hotspot-card__label">KISA AÇIKLAMA</span>
+              <span className="mars-hotspot-card__label">
+                {lang === 'en' ? 'OVERVIEW' : 'KISA AÇIKLAMA'}
+              </span>
               <p>{selectedHotspot.shortDescription}</p>
             </div>
 
             <div className="mars-hotspot-card__section mars-hotspot-card__section--science">
-              <span className="mars-hotspot-card__label">BİLİMSEL ÖNEMİ</span>
+              <span className="mars-hotspot-card__label">
+                {lang === 'en' ? 'SCIENTIFIC SIGNIFICANCE' : 'BİLİMSEL ÖNEMİ'}
+              </span>
               <p>{selectedHotspot.scientificSignificance}</p>
             </div>
 
@@ -156,7 +193,7 @@ export function MarsPlanet() {
                 rel="noopener noreferrer"
                 className="mars-hotspot-card__sourceLink"
               >
-                Kaynak: {selectedHotspot.sourceLabel} ↗
+                {lang === 'en' ? 'Source:' : 'Kaynak:'} {selectedHotspot.sourceLabel} ↗
               </a>
             </div>
           </aside>
@@ -173,19 +210,23 @@ export function MarsPlanet() {
             />
             <span>
               {isInteracting
-                ? '360° SERBEST KONTROL (OTOMATİK DÖNÜŞ DURAKLATILDI)'
+                ? lang === 'en'
+                  ? '360° FREE CONTROL (AUTO-ROTATION PAUSED)'
+                  : '360° SERBEST KONTROL (OTOMATİK DÖNÜŞ DURAKLATILDI)'
                 : reducedMotion
-                  ? 'HAREKET AZALTMA MODU AKTİF'
-                  : 'EKSENEL DÖNÜŞ AKTİF · FAREYLE 360° DÖNDÜR & YAKINLAŞTIR'}
+                  ? lang === 'en'
+                    ? 'REDUCED MOTION MODE ACTIVE'
+                    : 'HAREKET AZALTMA MODU AKTİF'
+                  : `${t.ui.marsPlanet.hudBadge} · ${t.ui.marsPlanet.hudHint}`}
             </span>
           </div>
 
           <div
             className="mars-hero-hud__hotspots"
             role="group"
-            aria-label="Mars üzerindeki önemli bölgeler"
+            aria-label={t.ui.marsPlanet.hotspotListAriaLabel}
           >
-            {MARS_HERO_HOTSPOTS.map((spot) => {
+            {t.data.marsHeroHotspots.map((spot) => {
               const isSelected = selectedHotspot?.id === spot.id;
               return (
                 <button
@@ -207,12 +248,16 @@ export function MarsPlanet() {
             })}
           </div>
 
-          <div className="mars-hero-hud__zoomGroup" role="group" aria-label="Mars yakınlaştırma kontrolleri">
+          <div
+            className="mars-hero-hud__zoomGroup"
+            role="group"
+            aria-label={lang === 'en' ? 'Mars zoom controls' : 'Mars yakınlaştırma kontrolleri'}
+          >
             <button
               type="button"
               className="mars-zoom-btn"
-              title="Yakınlaştır (Mouse tekerleği ile de yakınlaştırabilirsiniz)"
-              aria-label="Mars'ı yakınlaştır"
+              title={lang === 'en' ? 'Zoom in (or use mouse wheel)' : 'Yakınlaştır (Mouse tekerleği ile de yakınlaştırabilirsiniz)'}
+              aria-label={lang === 'en' ? 'Zoom in on Mars' : "Mars'ı yakınlaştır"}
               onClick={() => triggerZoom(-0.75)}
             >
               +
@@ -220,8 +265,8 @@ export function MarsPlanet() {
             <button
               type="button"
               className="mars-zoom-btn"
-              title="Uzaklaştır"
-              aria-label="Mars'ı uzaklaştır"
+              title={lang === 'en' ? 'Zoom out' : 'Uzaklaştır'}
+              aria-label={lang === 'en' ? 'Zoom out on Mars' : "Mars'ı uzaklaştır"}
               onClick={() => triggerZoom(0.75)}
             >
               −
@@ -229,17 +274,18 @@ export function MarsPlanet() {
             <button
               type="button"
               className="mars-zoom-btn mars-zoom-btn--reset"
-              title="Bakış açısını ve yakınlaştırmayı sıfırla"
-              aria-label="Mars görünümünü sıfırla"
+              title={t.ui.marsPlanet.resetCamera}
+              aria-label={t.ui.marsPlanet.resetCamera}
               onClick={() => {
                 triggerZoom(0);
-                setSelectedHotspot(null);
+                setSelectedHotspotId(null);
               }}
             >
               ↺
             </button>
           </div>
         </div>
+      </div>
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
-import { LUNAR_MISSIONS } from '@/data/lunarMissionsData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { LunarMissionItem } from '@/types';
 
 interface LunarMissionDetailViewProps {
@@ -27,12 +27,16 @@ export function LunarMissionDetailView({
   onClose,
   onSelectMission,
 }: LunarMissionDetailViewProps) {
+  const { lang, t } = useLanguage();
+  const dUi = t.ui.lunarMissionDetail;
+  const lunarMissions = t.data.lunarMissions;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [livePhoto, setLivePhoto] = useState<LiveNasaPhotoResult | null>(null);
   const [loadingLivePhoto, setLoadingLivePhoto] = useState(false);
   const [livePhotoError, setLivePhotoError] = useState<string | null>(null);
 
-  const isActive = mission.statusLabel === 'AKTİF / UZATILMIŞ GÖREV';
+  const isActive = mission.statusLabel === t.ui.lunarExploration.activeStatusMatch;
 
   useEffect(() => {
     containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -76,24 +80,24 @@ export function LunarMissionDetailView({
           dateCreated: (firstWithLink.data[0].date_created ?? '').slice(0, 10),
         });
       } else {
-        setLivePhotoError(
-          'Bu sorgu için doğrudan görsel bulunamadı; resmi NASA NSSDCA bağlantısını kullanabilirsiniz.'
-        );
+        setLivePhotoError(dUi.liveGalleryEmpty);
       }
     } catch {
       setLivePhotoError(
-        'Canlı NASA API bağlantısı kurulamadı (çevrimdışı veya ağ kısıtlaması). Doğrulanmış yerel görev şeması gösteriliyor.'
+        lang === 'en'
+          ? 'Could not connect to live NASA API (offline or network restriction). Displaying verified local mission diagram.'
+          : 'Canlı NASA API bağlantısı kurulamadı (çevrimdışı veya ağ kısıtlaması). Doğrulanmış yerel görev şeması gösteriliyor.'
       );
     } finally {
       setLoadingLivePhoto(false);
     }
   };
 
-  const currentIndex = LUNAR_MISSIONS.findIndex((item) => item.id === mission.id);
+  const currentIndex = lunarMissions.findIndex((item) => item.id === mission.id);
   const prevMission =
-    LUNAR_MISSIONS[(currentIndex - 1 + LUNAR_MISSIONS.length) % LUNAR_MISSIONS.length];
+    lunarMissions[(currentIndex - 1 + lunarMissions.length) % lunarMissions.length];
   const nextMission =
-    LUNAR_MISSIONS[(currentIndex + 1) % LUNAR_MISSIONS.length];
+    lunarMissions[(currentIndex + 1) % lunarMissions.length];
 
   return (
     <motion.div
@@ -116,14 +120,14 @@ export function LunarMissionDetailView({
             onClick={onClose}
           >
             <span aria-hidden="true">←</span>
-            <span>AY KEŞİFLERİNE DÖN</span>
+            <span>{dUi.backToLunar}</span>
           </button>
 
           <nav
             className="rover-detail__switcher"
-            aria-label="Diğer Ay keşif görevleri"
+            aria-label={dUi.switchMissionTitle}
           >
-            {LUNAR_MISSIONS.map((item) => {
+            {lunarMissions.map((item) => {
               const isSelected = item.id === mission.id;
               return (
                 <button
@@ -174,21 +178,21 @@ export function LunarMissionDetailView({
             {/* Primary Mission Metadata Grid */}
             <dl className="rover-detail__metaGrid">
               <div className="rover-detail__metaItem">
-                <dt>AJANS / ÜLKE &amp; SINIF</dt>
+                <dt>{lang === 'en' ? 'AGENCY / COUNTRY & CLASS' : 'AJANS / ÜLKE & SINIF'}</dt>
                 <dd>
                   <strong>{mission.agency}</strong>
                   <span>{mission.missionType}</span>
                 </dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>FIRLATMA &amp; AY’A İNİŞ TARİHİ</dt>
+                <dt>{dUi.launchDateLabel} &amp; {dUi.landingDateLabel}</dt>
                 <dd>
-                  <strong>İniş: {mission.landingDate}</strong>
-                  <span>Fırlatma: {mission.launchDate}</span>
+                  <strong>{dUi.landingDateLabel}: {mission.landingDate}</strong>
+                  <span>{dUi.launchDateLabel}: {mission.launchDate}</span>
                 </dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>İNİŞ BÖLGESİ &amp; KOORDİNATLAR</dt>
+                <dt>{dUi.coordsLabel}</dt>
                 <dd>
                   <strong>{mission.landingSite}</strong>
                   <span>
@@ -197,14 +201,14 @@ export function LunarMissionDetailView({
                 </dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>AKTİF GÖREV SÜRESİ &amp; SONUÇ</dt>
+                <dt>{dUi.durationLabel} &amp; {dUi.missionEndDateLabel}</dt>
                 <dd>
                   <strong>{mission.durationLabel}</strong>
                   <span>{mission.missionEndDate}</span>
                 </dd>
               </div>
               <div className="rover-detail__metaItem rover-detail__metaItem--wide">
-                <dt>DOĞRULANMIŞ BİLİMSEL KAYNAKLAR</dt>
+                <dt>{dUi.sourcesTitle}</dt>
                 <dd className="lunar-detail__sourceLinks">
                   <a
                     href={mission.sourceUrl}
@@ -250,7 +254,7 @@ export function LunarMissionDetailView({
             <figcaption className="rover-detail__imageCaption">
               <div style={{ marginBottom: '0.5rem' }}>
                 <strong style={{ color: '#93c5fd' }}>
-                  [{livePhoto ? 'GERÇEK NASA ARŞİV FOTOĞRAFI' : mission.mediaKindLabel}]
+                  [{livePhoto ? (lang === 'en' ? 'ACTUAL NASA ARCHIVE PHOTO' : 'GERÇEK NASA ARŞİV FOTOĞRAFI') : mission.mediaKindLabel}]
                 </strong>{' '}
                 {livePhoto
                   ? `${livePhoto.title} (NASA ID: ${livePhoto.nasaId} · ${livePhoto.dateCreated})`
@@ -265,8 +269,8 @@ export function LunarMissionDetailView({
                     disabled={loadingLivePhoto}
                   >
                     {loadingLivePhoto
-                      ? 'NASA Arşivi Sorgulanıyor...'
-                      : '📸 NASA Image Library’den Gerçek Görev Fotoğrafı Yükle'}
+                      ? dUi.liveGalleryLoading
+                      : `📸 ${dUi.liveGalleryTitle}`}
                   </button>
                 ) : (
                   <button
@@ -274,7 +278,7 @@ export function LunarMissionDetailView({
                     className="lunar-live-photo-btn"
                     onClick={() => setLivePhoto(null)}
                   >
-                    📐 Teknik Rekonstrüksiyon Şemasına Dön
+                    📐 {lang === 'en' ? 'Return to Technical Diagram' : 'Teknik Rekonstrüksiyon Şemasına Dön'}
                   </button>
                 )}
               </div>
@@ -311,25 +315,25 @@ export function LunarMissionDetailView({
           aria-labelledby="lunar-objective-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 01</span>
+            <span className="rover-detail__sectionIndex">{dUi.sectionLabel} 01</span>
             <h2
               id="lunar-objective-heading"
               className="rover-detail__sectionTitle"
             >
-              GÖREV AMACI VE GÖREV SONUCU
+              {dUi.objectiveTitle} &amp; {dUi.outcomeTitle}
             </h2>
           </div>
 
           <div className="rover-detail__objectiveGrid">
             <article className="rover-detail__narrativeCard">
-              <span className="rover-detail__cardTag">GÖREV AMACI</span>
-              <h3>Bilimsel ve Mühendislik Hedefleri</h3>
+              <span className="rover-detail__cardTag">{dUi.objectiveEyebrow}</span>
+              <h3>{dUi.objectiveTitle}</h3>
               <p>{mission.missionObjective}</p>
             </article>
 
             <article className="rover-detail__narrativeCard rover-detail__narrativeCard--accent">
-              <span className="rover-detail__cardTag">GÖREV SONUCU &amp; MİRASI</span>
-              <h3>Elde Edilen Başarı ve Sonuç</h3>
+              <span className="rover-detail__cardTag">{dUi.outcomeEyebrow}</span>
+              <h3>{dUi.outcomeTitle}</h3>
               <p>{mission.missionOutcome}</p>
             </article>
           </div>
@@ -341,9 +345,9 @@ export function LunarMissionDetailView({
           aria-labelledby="lunar-specs-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 02</span>
+            <span className="rover-detail__sectionIndex">{dUi.sectionLabel} 02</span>
             <h2 id="lunar-specs-heading" className="rover-detail__sectionTitle">
-              TEKNİK ÖZELLİKLER VE DONANIM MİMARİSİ
+              {dUi.specsTitle}
             </h2>
           </div>
 
@@ -363,12 +367,12 @@ export function LunarMissionDetailView({
           aria-labelledby="lunar-instruments-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 03</span>
+            <span className="rover-detail__sectionIndex">{dUi.sectionLabel} 03</span>
             <h2
               id="lunar-instruments-heading"
               className="rover-detail__sectionTitle"
             >
-              BİLİMSEL CİHAZLAR VE DENEY YÜKLERİ
+              {dUi.instrumentsTitle}
             </h2>
           </div>
 
@@ -400,12 +404,12 @@ export function LunarMissionDetailView({
           aria-labelledby="lunar-discoveries-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 04</span>
+            <span className="rover-detail__sectionIndex">{dUi.sectionLabel} 04</span>
             <h2
               id="lunar-discoveries-heading"
               className="rover-detail__sectionTitle"
             >
-              ÖNEMLİ BİLİMSEL KEŞİFLER
+              {dUi.discoveriesTitle}
             </h2>
           </div>
 
@@ -417,7 +421,7 @@ export function LunarMissionDetailView({
               >
                 <div className="rover-discovery-card__header">
                   <span className="rover-discovery-card__num">
-                    KEŞİF 0{idx + 1}
+                    {lang === 'en' ? `DISCOVERY 0${idx + 1}` : `KEŞİF 0${idx + 1}`}
                   </span>
                   <span className="rover-discovery-card__loc">
                     {discovery.location}
@@ -440,12 +444,12 @@ export function LunarMissionDetailView({
           aria-labelledby="lunar-timeline-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 05</span>
+            <span className="rover-detail__sectionIndex">{dUi.sectionLabel} 05</span>
             <h2
               id="lunar-timeline-heading"
               className="rover-detail__sectionTitle"
             >
-              GÖREV ZAMAN ÇİZELGESİ
+              {dUi.timelineTitle}
             </h2>
           </div>
 
@@ -476,7 +480,9 @@ export function LunarMissionDetailView({
             className="rover-detail__neighborBtn"
             onClick={() => onSelectMission(prevMission)}
           >
-            <span className="rover-detail__neighborHint">← ÖNCEKİ AY GÖREVİ</span>
+            <span className="rover-detail__neighborHint">
+              {lang === 'en' ? '← PREVIOUS LUNAR MISSION' : '← ÖNCEKİ AY GÖREVİ'}
+            </span>
             <strong>{prevMission.name}</strong>
           </button>
 
@@ -485,7 +491,7 @@ export function LunarMissionDetailView({
             className="btn btn--primary"
             onClick={onClose}
           >
-            ← AY KEŞİFLERİNE DÖN
+            ← {dUi.backToLunar}
           </button>
 
           <button
@@ -493,7 +499,9 @@ export function LunarMissionDetailView({
             className="rover-detail__neighborBtn rover-detail__neighborBtn--next"
             onClick={() => onSelectMission(nextMission)}
           >
-            <span className="rover-detail__neighborHint">SONRAKİ AY GÖREVİ →</span>
+            <span className="rover-detail__neighborHint">
+              {lang === 'en' ? 'NEXT LUNAR MISSION →' : 'SONRAKİ AY GÖREVİ →'}
+            </span>
             <strong>{nextMission.name}</strong>
           </button>
         </footer>

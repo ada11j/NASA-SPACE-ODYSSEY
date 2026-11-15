@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MISSION_SIMULATION_DATA } from '@/data/missionSimulationData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { RoverId } from '@/types';
 
 export function MissionSimulationSection() {
+  const { lang, t } = useLanguage();
+  const sUi = t.ui.missionSimulation;
+  const simData = t.data.missionSimulationData;
+
   const [selectedRoverId, setSelectedRoverId] = useState<RoverId>('opportunity');
   const [currentStageIndex, setCurrentStageIndex] = useState<number>(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
 
-  const missionProfile = MISSION_SIMULATION_DATA[selectedRoverId];
+  const missionProfile = simData[selectedRoverId];
   const stages = missionProfile.stages;
   const activeStage = stages[currentStageIndex] ?? stages[0];
 
@@ -35,6 +39,29 @@ export function MissionSimulationSection() {
   const progressPct =
     stages.length > 1 ? (currentStageIndex / (stages.length - 1)) * 100 : 100;
 
+  const simRoverTabs = [
+    {
+      id: 'opportunity',
+      label: 'Opportunity (MER-B)',
+      tag: lang === 'en' ? '5 Stages · 2018 Dust Storm Special' : '5 Aşama · 2018 Toz Fırtınası Özel',
+    },
+    {
+      id: 'spirit',
+      label: 'Spirit (MER-A)',
+      tag: lang === 'en' ? '3 Stages · Gusev & Home Plate' : '3 Aşama · Gusev & Home Plate',
+    },
+    {
+      id: 'curiosity',
+      label: 'Curiosity (MSL)',
+      tag: lang === 'en' ? '3 Stages · Sky Crane & Mount Sharp' : '3 Aşama · Sky Crane & Sharp Dağı',
+    },
+    {
+      id: 'perseverance',
+      label: 'Perseverance (M2020)',
+      tag: lang === 'en' ? '3 Stages · Ingenuity & Core Samples' : '3 Aşama · Ingenuity & Karotlar',
+    },
+  ] as const;
+
   return (
     <section
       id="mission-simulation"
@@ -50,36 +77,30 @@ export function MissionSimulationSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            TARİHSEL GÖREV KRONOLOJİSİ · 06
+            {sUi.eyebrow}
           </span>
           <h2 id="mission-simulation-heading" className="exploration-section__title">
-            ETKİLEŞİMLİ GÖREV SİMÜLASYONU
+            {sUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            Fırlatılıştan İnişe ve Yüzey Keşiflerine Adım Adım Tarihsel Görev Akışı
+            {sUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            Dört Mars keşif aracından birini seçerek fırlatma, atmosfere giriş (EDL),
-            yüzey keşifleri ve görev sonu aşamalarını kronolojik olarak deneyimleyin.
+            {sUi.description}
           </p>
         </motion.div>
 
         {/* Explicit Scientific Honesty Disclaimer */}
         <div className="sim-disclaimer" role="note">
-          <span className="sim-disclaimer__badge">BİLİMSEL METODOLOJİ</span>
+          <span className="sim-disclaimer__badge">
+            {lang === 'en' ? 'SCIENTIFIC METHODOLOGY' : 'BİLİMSEL METODOLOJİ'}
+          </span>
           <p>{missionProfile.disclaimer}</p>
         </div>
 
         {/* Rover Selector Tabs */}
-        <div className="sim-rover-tabs" role="tablist" aria-label="Simülasyon aracı seçin">
-          {(
-            [
-              { id: 'opportunity', label: 'Opportunity (MER-B)', tag: '5 Aşama · 2018 Toz Fırtınası Özel' },
-              { id: 'spirit', label: 'Spirit (MER-A)', tag: '3 Aşama · Gusev & Home Plate' },
-              { id: 'curiosity', label: 'Curiosity (MSL)', tag: '3 Aşama · Sky Crane & Sharp Dağı' },
-              { id: 'perseverance', label: 'Perseverance (M2020)', tag: '3 Aşama · Ingenuity & Karotlar' },
-            ] as const
-          ).map((item) => {
+        <div className="sim-rover-tabs" role="tablist" aria-label={sUi.roverSelectorAria}>
+          {simRoverTabs.map((item) => {
             const isSelected = selectedRoverId === item.id;
             return (
               <button
@@ -115,7 +136,7 @@ export function MissionSimulationSection() {
                 }}
                 disabled={currentStageIndex === 0}
               >
-                ← Önceki Aşama
+                {sUi.prevStageBtn}
               </button>
 
               <button
@@ -125,7 +146,7 @@ export function MissionSimulationSection() {
                 }`}
                 onClick={() => setIsAutoPlaying((prev) => !prev)}
               >
-                {isAutoPlaying ? '⏸ Otomatik Akışı Durdur' : '▶ Kronolojiyi Oynat'}
+                {isAutoPlaying ? sUi.pauseBtn : sUi.playBtn}
               </button>
 
               <button
@@ -139,7 +160,7 @@ export function MissionSimulationSection() {
                 }}
                 disabled={currentStageIndex === stages.length - 1}
               >
-                Sonraki Aşama →
+                {sUi.nextStageBtn}
               </button>
             </div>
           </div>
@@ -153,7 +174,7 @@ export function MissionSimulationSection() {
               />
             </div>
 
-            <div className="sim-stepper__nodes" role="tablist" aria-label="Görev aşamaları">
+            <div className="sim-stepper__nodes" role="tablist" aria-label={sUi.stageIndicatorPrefix}>
               {stages.map((stage, idx) => {
                 const isCurrent = idx === currentStageIndex;
                 const isCompleted = idx < currentStageIndex;
@@ -206,29 +227,33 @@ export function MissionSimulationSection() {
 
               <div className="sim-stage-card__telemetryStrip">
                 <span>
-                  📍 <strong>Konum:</strong> {activeStage.location}
+                  📍 <strong>{lang === 'en' ? 'Location:' : 'Konum:'}</strong> {activeStage.location}
                 </span>
                 <span>
-                  📡 <strong>Telemetri:</strong> {activeStage.telemetryBadge}
+                  📡 <strong>{lang === 'en' ? 'Telemetry:' : 'Telemetri:'}</strong> {activeStage.telemetryBadge}
                 </span>
               </div>
 
               <p className="sim-stage-card__narrative">{activeStage.narrative}</p>
 
               <div className="sim-stage-card__scienceBox">
-                <span>BİLİMSEL VE TEKNİK AÇIKLAMA</span>
+                <span>{sUi.scienceTitle}</span>
                 <p>{activeStage.scientificExplanation}</p>
               </div>
 
               {activeStage.specialAlert && (
-                <div className="sim-stage-card__specialAlert" role="region" aria-label="Özel görev dosyası">
+                <div
+                  className="sim-stage-card__specialAlert"
+                  role="region"
+                  aria-label={activeStage.specialAlert.title}
+                >
                   <strong>⚠️ {activeStage.specialAlert.title}</strong>
                   <p>{activeStage.specialAlert.detail}</p>
                 </div>
               )}
 
               <div className="sim-stage-card__events">
-                <span>KRONOLOJİK ÖNEMLİ OLAYLAR</span>
+                <span>{sUi.keyEventsTitle}</span>
                 <ul>
                   {activeStage.keyEvents.map((ev) => (
                     <li key={ev}>{ev}</li>
@@ -238,7 +263,7 @@ export function MissionSimulationSection() {
 
               <div className="sim-stage-card__footer">
                 <span className="sim-stage-card__sourceText">
-                  Resmi Kaynak: {activeStage.sourceLabel}
+                  {sUi.sourceLinkPrefix} {activeStage.sourceLabel}
                 </span>
                 <a
                   href={activeStage.sourceUrl}
@@ -246,7 +271,7 @@ export function MissionSimulationSection() {
                   rel="noopener noreferrer"
                   className="sim-stage-card__sourceLink"
                 >
-                  NASA Görev Kaydını Görüntüle ↗
+                  {lang === 'en' ? 'View NASA Mission Record ↗' : 'NASA Görev Kaydını Görüntüle ↗'}
                 </a>
               </div>
             </div>

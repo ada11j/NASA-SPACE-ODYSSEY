@@ -1,18 +1,45 @@
 import { lazy, Suspense, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ROVER_3D_ARCHITECTURES } from '@/data/rover3dLabData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { Rover3DPart, RoverId } from '@/types';
 
 const Rover3DViewport = lazy(() => import('@/scenes/Rover3DViewport'));
 
 export function Rover3DLabSection() {
+  const { lang, t } = useLanguage();
+  const rUi = t.ui.rover3dLab;
+  const architectures = t.data.rover3dArchitectures;
+
   const [selectedRoverId, setSelectedRoverId] = useState<RoverId>('opportunity');
   const [selectedPartId, setSelectedPartId] = useState<string>('arm');
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
 
-  const currentArch = ROVER_3D_ARCHITECTURES[selectedRoverId];
+  const currentArch = architectures[selectedRoverId];
   const activePart: Rover3DPart =
     currentArch.parts.find((p) => p.id === selectedPartId) ?? currentArch.parts[0];
+
+  const roverTabs = [
+    {
+      id: 'spirit',
+      label: 'Spirit (MER-A)',
+      sub: lang === 'en' ? 'Solar Powered · 185 kg' : 'Güneş Panelli · 185 kg',
+    },
+    {
+      id: 'opportunity',
+      label: 'Opportunity (MER-B)',
+      sub: lang === 'en' ? 'Solar Powered · 185 kg' : 'Güneş Panelli · 185 kg',
+    },
+    {
+      id: 'curiosity',
+      label: 'Curiosity (MSL)',
+      sub: lang === 'en' ? 'MMRTG Nuclear · 899 kg' : 'MMRTG Nükleer · 899 kg',
+    },
+    {
+      id: 'perseverance',
+      label: 'Perseverance (M2020)',
+      sub: lang === 'en' ? 'MMRTG Nuclear · 1,025 kg' : 'MMRTG Nükleer · 1.025 kg',
+    },
+  ] as const;
 
   return (
     <section
@@ -29,31 +56,22 @@ export function Rover3DLabSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            ETKİLEŞİMLİ MÜHENDİSLİK ŞEMASI · 04
+            {rUi.eyebrow}
           </span>
           <h2 id="rover-3d-lab-heading" className="exploration-section__title">
-            3D ROVER İNCELEME LABORATUVARI
+            {rUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            Tekerlekler, Kameralar, Robotik Kol, Antenler ve Bilimsel Yüklerin 3B Analizi
+            {rUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            Dört Mars keşif aracının alt sistemlerini 3 boyutlu mühendislik şeması üzerinde
-            fare veya dokunmatik ekranla 360° döndürün, yakınlaştırın ve parçalara tıklayarak
-            teknik işlevlerini inceleyin.
+            {rUi.description}
           </p>
         </motion.div>
 
         {/* Top Rover Selector Bar */}
-        <div className="lab3d-rover-bar" role="tablist" aria-label="3B incelenecek rover seçimi">
-          {(
-            [
-              { id: 'spirit', label: 'Spirit (MER-A)', sub: 'Güneş Panelli · 185 kg' },
-              { id: 'opportunity', label: 'Opportunity (MER-B)', sub: 'Güneş Panelli · 185 kg' },
-              { id: 'curiosity', label: 'Curiosity (MSL)', sub: 'MMRTG Nükleer · 899 kg' },
-              { id: 'perseverance', label: 'Perseverance (M2020)', sub: 'MMRTG Nükleer · 1.025 kg' },
-            ] as const
-          ).map((item) => {
+        <div className="lab3d-rover-bar" role="tablist" aria-label={rUi.roverSelectorAria}>
+          {roverTabs.map((item) => {
             const isSelected = selectedRoverId === item.id;
             return (
               <button
@@ -79,19 +97,25 @@ export function Rover3DLabSection() {
           <div className="lab3d-viewport-card">
             <div className="lab3d-viewport-card__hudTop">
               <span className="lab3d-schematic-badge">
-                3B ETKİLEŞİMLİ MÜHENDİSLİK ŞEMASI (CAD PRİMİTİFLERİ)
+                {rUi.hudBadgePrefix}
               </span>
               <button
                 type="button"
                 className="lab3d-autorotate-btn"
                 onClick={() => setAutoRotate((prev) => !prev)}
               >
-                {autoRotate ? '⏸ Otomatik Dönüşü Durdur' : '▶ Otomatik Döndür'}
+                {autoRotate ? `⏸ ${rUi.autoRotateOff}` : `▶ ${rUi.autoRotateOn}`}
               </button>
             </div>
 
-            <div className="lab3d-canvas-wrap" aria-label={`${currentArch.roverName} 3B model sahnesi`}>
-              <Suspense fallback={<div className="lab3d-loading">3B Model Sahnesi Yükleniyor…</div>}>
+            <div className="lab3d-canvas-wrap" aria-label={`${currentArch.roverName} 3D`}>
+              <Suspense
+                fallback={
+                  <div className="lab3d-loading">
+                    {lang === 'en' ? 'Loading 3D Model Scene…' : '3B Model Sahnesi Yükleniyor…'}
+                  </div>
+                }
+              >
                 <Rover3DViewport
                   roverId={selectedRoverId}
                   selectedPartId={selectedPartId}
@@ -108,10 +132,10 @@ export function Rover3DLabSection() {
           </div>
 
           {/* Right: Subsystem Selector Buttons + Active Part Technical Dossier */}
-          <aside className="lab3d-inspector" aria-label="Seçili rover alt sistemi detayları">
+          <aside className="lab3d-inspector" aria-label={rUi.SelectedSubsystemBadge}>
             <div className="lab3d-part-selector">
               <span className="lab3d-part-selector__label">
-                ALT SİSTEM SEÇİN (VEYA 3B MODEL ÜZERİNDE TIKLAYIN)
+                {rUi.partsListTitlePrefix} ({rUi.partsListHint})
               </span>
               <div className="lab3d-part-buttons">
                 {currentArch.parts.map((part) => {
@@ -144,17 +168,17 @@ export function Rover3DLabSection() {
               <h3 className="lab3d-part-dossier__title">{activePart.name}</h3>
 
               <div className="lab3d-part-dossier__block">
-                <span>TEMEL İŞLEVİ</span>
+                <span>{rUi.functionSummaryTitle}</span>
                 <p>{activePart.functionSummary}</p>
               </div>
 
               <div className="lab3d-part-dossier__block">
-                <span>MÜHENDİSLİK VE TEKNİK AÇIKLAMA</span>
+                <span>{rUi.technicalDetailsTitle}</span>
                 <p>{activePart.technicalDetails}</p>
               </div>
 
               <div className="lab3d-part-dossier__specsBox">
-                <span>DONANIM ÖZETİ</span>
+                <span>{rUi.specsBadgeLabel}</span>
                 <strong>{activePart.specs}</strong>
               </div>
             </div>

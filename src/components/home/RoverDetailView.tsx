@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
-import { MARS_ROVERS } from '@/data/explorers';
+import { useLanguage } from '@/context/LanguageContext';
 import type { MarsRoverItem } from '@/types';
 
 interface RoverDetailViewProps {
@@ -21,8 +21,10 @@ export function RoverDetailView({
   onClose,
   onSelectRover,
 }: RoverDetailViewProps) {
+  const { lang, t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
-  const isActive = rover.statusLabel === 'AKTİF GÖREV';
+  const isActive =
+    rover.statusLabel === 'AKTİF GÖREV' || rover.statusLabel === 'ACTIVE MISSION';
 
   // Scroll the detail view to the top whenever a new rover is selected.
   useEffect(() => {
@@ -40,10 +42,10 @@ export function RoverDetailView({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  const currentIndex = MARS_ROVERS.findIndex((item) => item.id === rover.id);
-  const prevRover =
-    MARS_ROVERS[(currentIndex - 1 + MARS_ROVERS.length) % MARS_ROVERS.length];
-  const nextRover = MARS_ROVERS[(currentIndex + 1) % MARS_ROVERS.length];
+  const rovers = t.data.marsRovers;
+  const currentIndex = rovers.findIndex((item) => item.id === rover.id);
+  const prevRover = rovers[(currentIndex - 1 + rovers.length) % rovers.length];
+  const nextRover = rovers[(currentIndex + 1) % rovers.length];
 
   return (
     <motion.div
@@ -66,14 +68,14 @@ export function RoverDetailView({
             onClick={onClose}
           >
             <span aria-hidden="true">←</span>
-            <span>MARS KEŞİFLERİNE DÖN</span>
+            <span>{t.ui.roverDetail.backToMars.toUpperCase()}</span>
           </button>
 
           <nav
             className="rover-detail__switcher"
-            aria-label="Diğer Mars keşif araçları"
+            aria-label={t.ui.roverDetail.switchRoverTitle}
           >
-            {MARS_ROVERS.map((item) => {
+            {rovers.map((item) => {
               const isSelected = item.id === rover.id;
               return (
                 <button
@@ -124,29 +126,34 @@ export function RoverDetailView({
             {/* Primary Mission Metadata Grid */}
             <dl className="rover-detail__metaGrid">
               <div className="rover-detail__metaItem">
-                <dt>FIRLATMA TARİHİ</dt>
+                <dt>{t.ui.roverDetail.launchDateLabel.toUpperCase()}</dt>
                 <dd>{rover.launchDate}</dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>MARS İNİŞ TARİHİ</dt>
+                <dt>{t.ui.roverDetail.landingDateLabel.toUpperCase()}</dt>
                 <dd>{rover.landingDate}</dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>İNİŞ BÖLGESİ & KOORDİNATLAR</dt>
+                <dt>{t.ui.roverDetail.coordsLabel.toUpperCase()}</dt>
                 <dd>
                   <strong>{rover.landingSite}</strong>
                   <span>{rover.landingCoordinates}</span>
                 </dd>
               </div>
               <div className="rover-detail__metaItem">
-                <dt>PLANLANAN / GERÇEKLEŞEN SÜRE</dt>
+                <dt>
+                  {t.ui.roverDetail.plannedDurationLabel.toUpperCase()} /{' '}
+                  {t.ui.roverDetail.actualDurationLabel.toUpperCase()}
+                </dt>
                 <dd>
                   <strong>{rover.actualDuration}</strong>
-                  <span>Planlanan: {rover.plannedDuration}</span>
+                  <span>
+                    {lang === 'en' ? 'Planned:' : 'Planlanan:'} {rover.plannedDuration}
+                  </span>
                 </dd>
               </div>
               <div className="rover-detail__metaItem rover-detail__metaItem--wide">
-                <dt>GÖREV SONU / GÜNCEL DURUM</dt>
+                <dt>{t.ui.roverDetail.missionEndDateLabel.toUpperCase()}</dt>
                 <dd>{rover.missionEndDate}</dd>
               </div>
             </dl>
@@ -169,7 +176,7 @@ export function RoverDetailView({
         {/* Key Telemetry Metrics */}
         <section
           className="rover-detail__metricsSection"
-          aria-label="Öne çıkan görev istatistikleri"
+          aria-label={t.ui.roverDetail.metricsAriaLabel}
         >
           <div className="rover-detail__metricsGrid">
             {rover.keyMetrics.map((metric) => (
@@ -190,25 +197,28 @@ export function RoverDetailView({
           aria-labelledby="section-objective-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 01</span>
+            <span className="rover-detail__sectionIndex">
+              {lang === 'en' ? 'SECTION 01' : 'BÖLÜM 01'}
+            </span>
             <h2
               id="section-objective-heading"
               className="rover-detail__sectionTitle"
             >
-              GÖREV AMACI VE BİLİMSEL MİRASI
+              {t.ui.roverDetail.objectiveTitle.toUpperCase()} &amp;{' '}
+              {t.ui.roverDetail.legacyTitle.toUpperCase()}
             </h2>
           </div>
 
           <div className="rover-detail__objectiveGrid">
             <article className="rover-detail__narrativeCard">
-              <span className="rover-detail__cardTag">TEMEL GÖREV AMACI</span>
-              <h3>Neden Gönderildi?</h3>
+              <span className="rover-detail__cardTag">{t.ui.roverDetail.objectiveEyebrow}</span>
+              <h3>{t.ui.roverDetail.objectiveTitle}</h3>
               <p>{rover.missionObjective}</p>
             </article>
 
             <article className="rover-detail__narrativeCard rover-detail__narrativeCard--accent">
-              <span className="rover-detail__cardTag">TARİHİ MİRAS & SONUÇ</span>
-              <h3>Uzay Tarihindeki Yeri</h3>
+              <span className="rover-detail__cardTag">{t.ui.roverDetail.legacyEyebrow}</span>
+              <h3>{t.ui.roverDetail.legacyTitle}</h3>
               <p>{rover.finalLegacy}</p>
             </article>
           </div>
@@ -220,9 +230,11 @@ export function RoverDetailView({
           aria-labelledby="section-specs-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 02</span>
+            <span className="rover-detail__sectionIndex">
+              {lang === 'en' ? 'SECTION 02' : 'BÖLÜM 02'}
+            </span>
             <h2 id="section-specs-heading" className="rover-detail__sectionTitle">
-              TEKNİK ÖZELLİKLER VE MÜHENDİSLİK
+              {t.ui.roverDetail.specsTitle.toUpperCase()}
             </h2>
           </div>
 
@@ -242,12 +254,14 @@ export function RoverDetailView({
           aria-labelledby="section-instruments-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 03</span>
+            <span className="rover-detail__sectionIndex">
+              {lang === 'en' ? 'SECTION 03' : 'BÖLÜM 03'}
+            </span>
             <h2
               id="section-instruments-heading"
               className="rover-detail__sectionTitle"
             >
-              BİLİMSEL CİHAZLAR VE ANALİTİK YÜKLER
+              {t.ui.roverDetail.instrumentsTitle.toUpperCase()}
             </h2>
           </div>
 
@@ -279,12 +293,14 @@ export function RoverDetailView({
           aria-labelledby="section-discoveries-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 04</span>
+            <span className="rover-detail__sectionIndex">
+              {lang === 'en' ? 'SECTION 04' : 'BÖLÜM 04'}
+            </span>
             <h2
               id="section-discoveries-heading"
               className="rover-detail__sectionTitle"
             >
-              ÖNEMLİ BİLİMSEL KEŞİFLER
+              {t.ui.roverDetail.discoveriesTitle.toUpperCase()}
             </h2>
           </div>
 
@@ -296,7 +312,7 @@ export function RoverDetailView({
               >
                 <div className="rover-discovery-card__header">
                   <span className="rover-discovery-card__num">
-                    KEŞİF 0{idx + 1}
+                    {lang === 'en' ? `DISCOVERY 0${idx + 1}` : `KEŞİF 0${idx + 1}`}
                   </span>
                   <span className="rover-discovery-card__loc">
                     {discovery.location}
@@ -319,12 +335,14 @@ export function RoverDetailView({
           aria-labelledby="section-timeline-heading"
         >
           <div className="rover-detail__sectionHeader">
-            <span className="rover-detail__sectionIndex">BÖLÜM 05</span>
+            <span className="rover-detail__sectionIndex">
+              {lang === 'en' ? 'SECTION 05' : 'BÖLÜM 05'}
+            </span>
             <h2
               id="section-timeline-heading"
               className="rover-detail__sectionTitle"
             >
-              GÖREV ZAMAN ÇİZELGESİ (MISSION TIMELINE)
+              {t.ui.roverDetail.timelineTitle.toUpperCase()}
             </h2>
           </div>
 
@@ -355,7 +373,9 @@ export function RoverDetailView({
             className="rover-detail__neighborBtn"
             onClick={() => onSelectRover(prevRover)}
           >
-            <span className="rover-detail__neighborHint">← ÖNCEKİ ARAÇ</span>
+            <span className="rover-detail__neighborHint">
+              ← {lang === 'en' ? 'PREVIOUS ROVER' : 'ÖNCEKİ ARAÇ'}
+            </span>
             <strong>{prevRover.name}</strong>
           </button>
 
@@ -364,7 +384,7 @@ export function RoverDetailView({
             className="btn btn--primary"
             onClick={onClose}
           >
-            ← MARS KEŞİFLERİNE DÖN
+            ← {t.ui.roverDetail.backToMars.toUpperCase()}
           </button>
 
           <button
@@ -372,7 +392,9 @@ export function RoverDetailView({
             className="rover-detail__neighborBtn rover-detail__neighborBtn--next"
             onClick={() => onSelectRover(nextRover)}
           >
-            <span className="rover-detail__neighborHint">SONRAKİ ARAÇ →</span>
+            <span className="rover-detail__neighborHint">
+              {lang === 'en' ? 'NEXT ROVER' : 'SONRAKİ ARAÇ'} →
+            </span>
             <strong>{nextRover.name}</strong>
           </button>
         </footer>

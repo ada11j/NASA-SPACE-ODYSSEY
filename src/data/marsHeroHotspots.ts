@@ -2,7 +2,7 @@ export interface MarsHeroHotspot {
   id: string;
   name: string;
   shortLabel: string;
-  category: 'Jeolojik Oluşum' | 'Aktif / Tarihi Keşif Bölgesi' | 'Kutup Buzulu';
+  category: string;
   /** Planetocentric latitude (-90 south to +90 north). */
   lat: number;
   /** East longitude (0 to 360). */

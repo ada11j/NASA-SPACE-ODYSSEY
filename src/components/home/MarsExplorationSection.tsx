@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { MARS_ROVERS } from '@/data/explorers';
+import { useLanguage } from '@/context/LanguageContext';
 import type { MarsRoverItem } from '@/types';
 
 interface MarsExplorationSectionProps {
@@ -12,6 +12,8 @@ export function MarsExplorationSection({
   onNavigateToSection,
   onSelectRover,
 }: MarsExplorationSectionProps) {
+  const { lang, t } = useLanguage();
+
   return (
     <section
       id="mars-exploration"
@@ -23,33 +25,33 @@ export function MarsExplorationSection({
       <div className="exploration-section__container">
         <motion.div
           className="exploration-section__header"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.65, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            KIZIL GEZEGEN ARŞİVİ · 01
+            {t.ui.marsExploration.eyebrow}
           </span>
 
           <h2 id="mars-exploration-heading" className="exploration-section__title">
-            MARS EXPLORATION
+            {t.ui.marsExploration.title}
           </h2>
 
           <p className="exploration-section__subtitle">
-            Kızıl Çöllerde İz Bırakan Dört Efsanevi Keşif Aracı
+            {t.ui.marsExploration.subtitle}
           </p>
 
           <p className="exploration-section__lead">
-            Gusev Krateri’nden Jezero Deltası’na uzanan yirmi yılı aşkın
-            yüzey araştırmalarında, Mars’ın antik su geçmişini ve jeolojik
-            evrimini gün yüzüne çıkaran robotik kâşifler.
+            {t.ui.marsExploration.description}
           </p>
         </motion.div>
 
         <div className="rover-grid">
-          {MARS_ROVERS.map((rover, index) => {
-            const isActive = rover.statusLabel === 'AKTİF GÖREV';
+          {t.data.marsRovers.map((rover, index) => {
+            const isActive =
+              rover.statusLabel === 'AKTİF GÖREV' ||
+              rover.statusLabel === 'ACTIVE MISSION';
 
             return (
               <motion.article
@@ -57,7 +59,7 @@ export function MarsExplorationSection({
                 className="rover-card"
                 role="button"
                 tabIndex={0}
-                aria-label={`${rover.name} detaylarını keşfet`}
+                aria-label={`${rover.name} — ${t.ui.marsExploration.inspectAriaSuffix}`}
                 onClick={() => onSelectRover(rover)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
@@ -107,7 +109,7 @@ export function MarsExplorationSection({
                   <p className="rover-card__credit">{rover.imageCredit}</p>
 
                   <span className="rover-card__action">
-                    DETAYLARI KEŞFET →
+                    {t.ui.marsExploration.cardInspectHint}
                   </span>
                 </div>
               </motion.article>
@@ -116,106 +118,46 @@ export function MarsExplorationSection({
         </div>
 
         {/* Complementary & Pioneer Mars Missions Strip (Sojourner, InSight, Ingenuity) */}
-        <div className="mars-pioneers-strip" aria-label="Öncü ve tamamlayıcı Mars görevleri">
+        <div
+          className="mars-pioneers-strip"
+          aria-label={t.ui.marsExploration.pioneerEyebrow}
+        >
           <div className="mars-pioneers-strip__header">
             <span className="exploration-section__eyebrow">
-              MARS KEŞİF EKOSİSTEMİ · ÖNCÜ &amp; DESTEKLEYİCİ GÖREVLER
+              {t.ui.marsExploration.pioneerEyebrow}
             </span>
             <h3 className="mars-pioneers-strip__title">
-              Rocker-Bogie’nin Öncüsü Sojourner, Sismik Gözlemci InSight ve Gökyüzü Kâşifi Ingenuity
+              {t.ui.marsExploration.pioneerTitle}
             </h3>
           </div>
 
           <div className="mars-pioneers-strip__grid">
-            <article className="mars-pioneer-card">
-              <div className="mars-pioneer-card__top">
-                <span className="mars-pioneer-card__tag">1997 · MARS PATHFINDER</span>
-                <span className="mars-pioneer-card__loc">Ares Vallis (19.13°K, 326.78°D)</span>
-              </div>
-              <h4>Sojourner (İlk Mars Gezicisi)</h4>
-              <p>
-                4 Temmuz 1997’de Mars Pathfinder hava yastıklarıyla Ares Vallis’e inen 11.5 kg’lık
-                Sojourner, 6 tekerlekli Rocker-Bogie süspansiyonunu ve APXS spektrometresini Mars’ta
-                ilk kez doğrulayarak Spirit, Opportunity, Curiosity ve Perseverance’ın mühendislik
-                temelini attı (83 Sol · ~100 m sürüş).
-              </p>
-              <div className="mars-pioneer-card__links">
-                <a
-                  href="https://science.nasa.gov/mission/mars-pathfinder/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  NASA Mars Pathfinder &amp; Sojourner ↗
-                </a>
-                <a
-                  href="https://tr.wikipedia.org/wiki/Sojourner_(ke%C5%9Fif_arac%C4%B1)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Vikipedi (TR) ↗
-                </a>
-              </div>
-            </article>
-
-            <article className="mars-pioneer-card">
-              <div className="mars-pioneer-card__top">
-                <span className="mars-pioneer-card__tag">2018–2022 · JEOFİZİK İNİŞ ARACI</span>
-                <span className="mars-pioneer-card__loc">Elysium Planitia (4.50°K, 135.62°D)</span>
-              </div>
-              <h4>InSight Mars Lander (İç Yapı ve Sismoloji)</h4>
-              <p>
-                26 Kasım 2018’de Elysium Planitia’ya inen sabit jeofizik laboratuvarı InSight,
-                yüzeye yerleştirdiği ultra-hassas SEIS sismometresiyle 1.319 Mars depremi (marsquake)
-                ve meteorit çarpması tespit ederek Mars’ın sıvı demir-nikel-kükürt çekirdek yarıçapını
-                (~1.830 km) ve kabuk kalınlığını ilk kez ölçtü.
-              </p>
-              <div className="mars-pioneer-card__links">
-                <a
-                  href="https://science.nasa.gov/mission/insight/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  NASA Science — InSight ↗
-                </a>
-                <a
-                  href="https://tr.wikipedia.org/wiki/InSight"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Vikipedi (TR) ↗
-                </a>
-              </div>
-            </article>
-
-            <article className="mars-pioneer-card">
-              <div className="mars-pioneer-card__top">
-                <span className="mars-pioneer-card__tag">2021–2024 · MARS HELİKOPTERİ</span>
-                <span className="mars-pioneer-card__loc">Jezero Krateri · Wright Brothers Field</span>
-              </div>
-              <h4>Ingenuity (İlk Gezegenlerarası Hava Aracı)</h4>
-              <p>
-                Perseverance’ın gövde altında Mars’a taşınan 1.8 kg’lık koaksiyel rotorlu Ingenuity,
-                19 Nisan 2021’de başka bir gezegende motorlu ve kontrollü uçuş gerçekleştiren ilk hava
-                aracı oldu. Planlanan 5 uçuşluk teknoloji gösterimini aşarak 72 başarılı uçuşta
-                toplam 17.0 km mesafe kat etti.
-              </p>
-              <div className="mars-pioneer-card__links">
-                <a
-                  href="https://science.nasa.gov/mission/mars-2020-perseverance/ingenuity-mars-helicopter/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  NASA Science — Ingenuity ↗
-                </a>
-                <a
-                  href="https://tr.wikipedia.org/wiki/Ingenuity_(helikopter)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Vikipedi (TR) ↗
-                </a>
-              </div>
-            </article>
+            {t.ui.marsExploration.pioneerMissions.map((pioneer) => (
+              <article key={pioneer.id} className="mars-pioneer-card">
+                <div className="mars-pioneer-card__top">
+                  <span className="mars-pioneer-card__tag">{pioneer.badge}</span>
+                  <span className="mars-pioneer-card__loc">{pioneer.site}</span>
+                </div>
+                <h4>{pioneer.name}</h4>
+                <p>{pioneer.summary}</p>
+                <div className="mars-pioneer-card__links">
+                  <a
+                    href={pioneer.nasaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t.ui.marsExploration.pioneerNasaLink} ↗
+                  </a>
+                  <a
+                    href={pioneer.wikiUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {pioneer.wikiLabel} ↗
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
 
@@ -229,7 +171,11 @@ export function MarsExplorationSection({
                 onNavigateToSection('lunar-exploration');
               }}
             >
-              <span>SONRAKİ BÖLÜM: LUNAR EXPLORATION</span>
+              <span>
+                {lang === 'en'
+                  ? 'NEXT SECTION: LUNAR EXPLORATION'
+                  : 'SONRAKİ BÖLÜM: LUNAR EXPLORATION'}
+              </span>
               <span aria-hidden="true">↓</span>
             </a>
           </div>

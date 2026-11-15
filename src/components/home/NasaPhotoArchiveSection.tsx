@@ -1,34 +1,45 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  fetchLiveNasaArchivePhotos,
-  VERIFIED_NASA_ARCHIVE_PHOTOS,
-} from '@/data/nasaPhotosData';
+import { fetchLiveNasaArchivePhotos } from '@/data/nasaPhotosData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { NasaArchivePhoto, RoverId } from '@/types';
 
 type MediaFilter = 'all' | 'photo-only' | 'illustration-only';
 
 export function NasaPhotoArchiveSection() {
+  const { lang, t } = useLanguage();
+  const aUi = t.ui.nasaPhotoArchive;
+  const verifiedPhotos = t.data.nasaArchivePhotos;
+
   const [roverFilter, setRoverFilter] = useState<RoverId | 'all'>('all');
   const [mediaFilter, setMediaFilter] = useState<MediaFilter>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [livePhotos, setLivePhotos] = useState<NasaArchivePhoto[]>([]);
-  const [apiStatus, setApiStatus] = useState<{
+  const [apiState, setApiState] = useState<{
     state: 'idle' | 'loading' | 'online' | 'fallback';
-    message: string;
-  }>({
-    state: 'idle',
-    message:
-      'Doğrulanmış yerel NASA/JPL arşivi aktif (8 yüksek çözünürlüklü kayıt). İsterseniz canlı NASA API sorgusu da başlatabilirsiniz.',
-  });
+    fetchedCount?: number;
+  }>({ state: 'idle' });
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const apiMessage = useMemo(() => {
+    if (apiState.state === 'loading') return aUi.liveStatusLoading;
+    if (apiState.state === 'online') {
+      return `${aUi.liveStatusSuccessPrefix} ${apiState.fetchedCount ?? 0} ${
+        lang === 'en' ? 'additional records loaded.' : 'ek arşiv kaydı yüklendi.'
+      }`;
+    }
+    if (apiState.state === 'fallback') return aUi.liveStatusFallback;
+    return lang === 'en'
+      ? `Verified local NASA/JPL archive active (${verifiedPhotos.length} high-resolution records). You can also query the live NASA API.`
+      : `Doğrulanmış yerel NASA/JPL arşivi aktif (${verifiedPhotos.length} yüksek çözünürlüklü kayıt). İsterseniz canlı NASA API sorgusu da başlatabilirsiniz.`;
+  }, [apiState, aUi, lang, verifiedPhotos.length]);
+
   const combinedPhotos = useMemo(() => {
-    const existingIds = new Set(VERIFIED_NASA_ARCHIVE_PHOTOS.map((p) => p.nasaPiaCode));
+    const existingIds = new Set(verifiedPhotos.map((p) => p.nasaPiaCode));
     const uniqueLive = livePhotos.filter((p) => !existingIds.has(p.nasaPiaCode));
-    return [...VERIFIED_NASA_ARCHIVE_PHOTOS, ...uniqueLive];
-  }, [livePhotos]);
+    return [...verifiedPhotos, ...uniqueLive];
+  }, [verifiedPhotos, livePhotos]);
 
   const filteredPhotos = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -58,10 +69,7 @@ export function NasaPhotoArchiveSection() {
   }, [combinedPhotos, roverFilter, mediaFilter, searchQuery]);
 
   const handleLoadLiveNasaApi = async () => {
-    setApiStatus({
-      state: 'loading',
-      message: 'NASA Resmi Görüntü Arşivi (images-api.nasa.gov) sorgulanıyor…',
-    });
+    setApiState({ state: 'loading' });
 
     try {
       const fetched = await fetchLiveNasaArchivePhotos(roverFilter);
@@ -71,23 +79,12 @@ export function NasaPhotoArchiveSection() {
           for (const item of fetched) map.set(item.id, item);
           return Array.from(map.values());
         });
-        setApiStatus({
-          state: 'online',
-          message: `Canlı NASA API bağlantısı başarılı: ${fetched.length} ek arşiv kaydı yüklendi.`,
-        });
+        setApiState({ state: 'online', fetchedCount: fetched.length });
       } else {
-        setApiStatus({
-          state: 'fallback',
-          message:
-            'NASA API ek kayıt döndürmedi; doğrulanmış yerel NASA/JPL arşivi kesintisiz kullanılıyor.',
-        });
+        setApiState({ state: 'fallback' });
       }
     } catch {
-      setApiStatus({
-        state: 'fallback',
-        message:
-          'Çevrimdışı / ağ kısıtlaması algılandı: Doğrulanmış yerel NASA/JPL yedek (fallback) arşivi kesintisiz çalışıyor.',
-      });
+      setApiState({ state: 'fallback' });
     }
   };
 
@@ -131,29 +128,26 @@ export function NasaPhotoArchiveSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            RESMİ GÖRÜNTÜ KATALOĞU · 03
+            {aUi.eyebrow}
           </span>
           <h2 id="nasa-archive-heading" className="exploration-section__title">
-            NASA FOTOĞRAF ARŞİVİ
+            {aUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            Doğrulanmış Görev Fotoğrafları, Kamera Telemetrisi ve Kaynak Arşivi
+            {aUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            NASA/JPL-Caltech Photojournal ve NASA Image Library kayıtları. Her görselde
-            çekim tarihi, kullanılan kamera sistemi, PIA katalog numarası ve görselin
-            <strong> gerçek görev fotoğrafı mı yoksa resmi mühendislik illüstrasyonu mu</strong> olduğu
-            açıkça belirtilmiştir.
+            {aUi.description}
           </p>
         </motion.div>
 
         {/* Filter & Search Bar */}
-        <div className="archive-controls" role="region" aria-label="Fotoğraf arşivi filtreleri">
+        <div className="archive-controls" role="region" aria-label={aUi.title}>
           <div className="archive-controls__topRow">
-            <div className="archive-rover-tabs" role="tablist" aria-label="Rovera göre filtrele">
+            <div className="archive-rover-tabs" role="tablist" aria-label={aUi.filterAll}>
               {(
                 [
-                  { id: 'all', label: 'Tüm Araçlar' },
+                  { id: 'all', label: aUi.filterAll },
                   { id: 'spirit', label: 'Spirit (MER-A)' },
                   { id: 'opportunity', label: 'Opportunity (MER-B)' },
                   { id: 'curiosity', label: 'Curiosity' },
@@ -180,7 +174,7 @@ export function NasaPhotoArchiveSection() {
 
             <div className="archive-media-filter">
               <label htmlFor="archive-media-select" className="sr-only">
-                Görsel Türü Filtresi
+                {lang === 'en' ? 'Media Type Filter' : 'Görsel Türü Filtresi'}
               </label>
               <select
                 id="archive-media-select"
@@ -191,9 +185,9 @@ export function NasaPhotoArchiveSection() {
                   setLightboxIndex(null);
                 }}
               >
-                <option value="all">Tüm Görsel Türleri</option>
-                <option value="photo-only">Sadece Gerçek NASA Fotoğrafları</option>
-                <option value="illustration-only">Sadece Resmi İllüstrasyonlar</option>
+                <option value="all">{lang === 'en' ? 'All Media Types' : 'Tüm Görsel Türleri'}</option>
+                <option value="photo-only">{aUi.mediaKindActual}</option>
+                <option value="illustration-only">{aUi.mediaKindIllustration}</option>
               </select>
             </div>
           </div>
@@ -203,13 +197,17 @@ export function NasaPhotoArchiveSection() {
               <input
                 type="search"
                 className="archive-search-input"
-                placeholder="Kamera adı (PANCAM, MAHLI, WATSON), PIA kodu veya anahtar kelime ara…"
+                placeholder={
+                  lang === 'en'
+                    ? 'Search camera (PANCAM, MAHLI, WATSON), PIA code, or keyword…'
+                    : 'Kamera adı (PANCAM, MAHLI, WATSON), PIA kodu veya anahtar kelime ara…'
+                }
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setLightboxIndex(null);
                 }}
-                aria-label="Fotoğraf arşivinde ara"
+                aria-label={lang === 'en' ? 'Search photo archive' : 'Fotoğraf arşivinde ara'}
               />
               {searchQuery && (
                 <button
@@ -217,7 +215,7 @@ export function NasaPhotoArchiveSection() {
                   className="archive-search-clear"
                   onClick={() => setSearchQuery('')}
                 >
-                  Temizle
+                  {lang === 'en' ? 'Clear' : 'Temizle'}
                 </button>
               )}
             </div>
@@ -226,31 +224,32 @@ export function NasaPhotoArchiveSection() {
               type="button"
               className="archive-api-btn"
               onClick={handleLoadLiveNasaApi}
-              disabled={apiStatus.state === 'loading'}
+              disabled={apiState.state === 'loading'}
             >
-              {apiStatus.state === 'loading'
-                ? 'Sorgulanıyor…'
-                : '🛰️ Canlı NASA API Sorgula'}
+              {apiState.state === 'loading'
+                ? aUi.liveStatusLoading
+                : `🛰️ ${aUi.modeLiveBtn}`}
             </button>
           </div>
 
           <div
-            className={`archive-status-bar archive-status-bar--${apiStatus.state}`}
+            className={`archive-status-bar archive-status-bar--${apiState.state}`}
             role="status"
             aria-live="polite"
           >
             <span className="archive-status-bar__dot" />
-            <span>{apiStatus.message}</span>
+            <span>{apiMessage}</span>
           </div>
         </div>
 
         {/* Gallery Grid or Empty Result State */}
         {filteredPhotos.length === 0 ? (
           <div className="archive-empty-state">
-            <h3>Eşleşen Arşiv Kaydı Bulunamadı</h3>
+            <h3>{lang === 'en' ? 'No Matching Archive Records' : 'Eşleşen Arşiv Kaydı Bulunamadı'}</h3>
             <p>
-              Seçtiğiniz filtre veya arama terimiyle eşleşen bir NASA görseli bulunamadı.
-              Filtreleri sıfırlayarak tüm doğrulanmış arşivi görüntüleyebilirsiniz.
+              {lang === 'en'
+                ? 'No NASA images matched your selected filter or search term. Reset filters to view the full verified archive.'
+                : 'Seçtiğiniz filtre veya arama terimiyle eşleşen bir NASA görseli bulunamadı. Filtreleri sıfırlayarak tüm doğrulanmış arşivi görüntüleyebilirsiniz.'}
             </p>
             <button
               type="button"
@@ -261,7 +260,7 @@ export function NasaPhotoArchiveSection() {
                 setSearchQuery('');
               }}
             >
-              Filtreleri Sıfırla
+              {lang === 'en' ? 'Reset Filters' : 'Filtreleri Sıfırla'}
             </button>
           </div>
         ) : (
@@ -281,7 +280,7 @@ export function NasaPhotoArchiveSection() {
                     className="archive-card__media"
                     role="button"
                     tabIndex={0}
-                    aria-label={`${photo.title} fotoğrafını tam ekran büyüt`}
+                    aria-label={`${photo.title} — ${aUi.cardInspectBtn}`}
                     onClick={() => setLightboxIndex(index)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -304,12 +303,12 @@ export function NasaPhotoArchiveSection() {
                             : 'archive-kind-badge--illustration'
                         }`}
                       >
-                        {photo.mediaKindLabelTr}
+                        {isRealPhoto ? aUi.mediaKindActual : aUi.mediaKindIllustration}
                       </span>
                       <span className="archive-cam-badge">{photo.cameraCode}</span>
                     </div>
                     <div className="archive-card__zoomHint">
-                      <span>🔍 BÜYÜT & GALERİDE AÇ</span>
+                      <span>🔍 {aUi.cardInspectBtn.toUpperCase()}</span>
                     </div>
                   </div>
 
@@ -323,7 +322,7 @@ export function NasaPhotoArchiveSection() {
 
                     <h3 className="archive-card__title">{photo.title}</h3>
                     <p className="archive-card__camFull">
-                      <strong>Kamera:</strong> {photo.cameraFullName}
+                      <strong>{aUi.modalCameraLabel}:</strong> {photo.cameraFullName}
                     </p>
                     <p className="archive-card__desc">{photo.description}</p>
 
@@ -337,7 +336,7 @@ export function NasaPhotoArchiveSection() {
                           className="archive-card__expandBtn"
                           onClick={() => setLightboxIndex(index)}
                         >
-                          Büyüt
+                          {aUi.cardInspectBtn}
                         </button>
                         <a
                           href={photo.sourceUrl}
@@ -345,7 +344,7 @@ export function NasaPhotoArchiveSection() {
                           rel="noopener noreferrer"
                           className="archive-card__sourceLink"
                         >
-                          NASA Kaynağı ↗
+                          {aUi.modalOfficialLink}
                         </a>
                       </div>
                     </div>
@@ -383,10 +382,12 @@ export function NasaPhotoArchiveSection() {
                         : 'archive-kind-badge--illustration'
                     }`}
                   >
-                    {activeLightboxPhoto.mediaKindLabelTr}
+                    {activeLightboxPhoto.mediaKind === 'Actual NASA Mission Photo'
+                      ? aUi.mediaKindActual
+                      : aUi.mediaKindIllustration}
                   </span>
                   <span className="archive-lightbox__counter">
-                    Görüntü {lightboxIndex + 1} / {filteredPhotos.length}
+                    {lightboxIndex + 1} / {filteredPhotos.length}
                   </span>
                 </div>
 
@@ -394,8 +395,9 @@ export function NasaPhotoArchiveSection() {
                   type="button"
                   className="archive-lightbox__closeBtn"
                   onClick={() => setLightboxIndex(null)}
+                  aria-label={aUi.modalCloseAria}
                 >
-                  ✕ KAPAT (ESC)
+                  ✕ {aUi.modalCloseBtn}
                 </button>
               </header>
 
@@ -404,7 +406,7 @@ export function NasaPhotoArchiveSection() {
                   <button
                     type="button"
                     className="archive-lightbox__navBtn archive-lightbox__navBtn--prev"
-                    aria-label="Önceki fotoğraf"
+                    aria-label={lang === 'en' ? 'Previous photo' : 'Önceki fotoğraf'}
                     onClick={() =>
                       setLightboxIndex(
                         (lightboxIndex - 1 + filteredPhotos.length) %
@@ -424,7 +426,7 @@ export function NasaPhotoArchiveSection() {
                   <button
                     type="button"
                     className="archive-lightbox__navBtn archive-lightbox__navBtn--next"
-                    aria-label="Sonraki fotoğraf"
+                    aria-label={lang === 'en' ? 'Next photo' : 'Sonraki fotoğraf'}
                     onClick={() =>
                       setLightboxIndex((lightboxIndex + 1) % filteredPhotos.length)
                     }
@@ -443,20 +445,20 @@ export function NasaPhotoArchiveSection() {
 
                   <dl className="archive-lightbox__specs">
                     <div>
-                      <dt>ÇEKİM TARİHİ / SOL</dt>
+                      <dt>{aUi.modalEarthDateLabel} / {aUi.modalSolLabel}</dt>
                       <dd>
                         {activeLightboxPhoto.earthDate} · {activeLightboxPhoto.solOrDate}
                       </dd>
                     </div>
                     <div>
-                      <dt>KAMERA SİSTEMİ</dt>
+                      <dt>{aUi.modalCameraLabel}</dt>
                       <dd>
                         {activeLightboxPhoto.cameraCode} —{' '}
                         {activeLightboxPhoto.cameraFullName}
                       </dd>
                     </div>
                     <div>
-                      <dt>KATALOG KODU & TELİF</dt>
+                      <dt>{aUi.modalPiaLabel} &amp; {aUi.modalCreditLabel}</dt>
                       <dd>
                         {activeLightboxPhoto.nasaPiaCode} · {activeLightboxPhoto.credit}
                       </dd>
@@ -473,7 +475,7 @@ export function NasaPhotoArchiveSection() {
                     rel="noopener noreferrer"
                     className="btn btn--primary archive-lightbox__extBtn"
                   >
-                    RESMİ NASA KATALOG SAYFASINI AÇ ↗
+                    {aUi.modalOfficialLink}
                   </a>
                 </aside>
               </div>

@@ -1,6 +1,7 @@
-﻿import { useCallback, useState } from 'react';
+﻿import { useCallback, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrandLogo } from '@/components/home/BrandLogo';
+import { LanguageSwitcher } from '@/components/home/LanguageSwitcher';
 import { LunarExplorationSection } from '@/components/home/LunarExplorationSection';
 import { LunarMissionDetailView } from '@/components/home/LunarMissionDetailView';
 import { MarsExplorationSection } from '@/components/home/MarsExplorationSection';
@@ -12,20 +13,10 @@ import { ReferencesSection } from '@/components/home/ReferencesSection';
 import { Rover3DLabSection } from '@/components/home/Rover3DLabSection';
 import { RoverComparisonSection } from '@/components/home/RoverComparisonSection';
 import { RoverDetailView } from '@/components/home/RoverDetailView';
+import { SpacecraftQuizSection } from '@/components/home/SpacecraftQuizSection';
 import { StarField } from '@/components/home/StarField';
-import { HOME_CONTENT, MARS_VISUAL_CREDIT } from '@/config/constants';
+import { useLanguage } from '@/context/LanguageContext';
 import type { LunarMissionItem, MarsRoverItem, SectionId } from '@/types';
-
-const NAV_ITEMS: ReadonlyArray<{ id: SectionId; label: string }> = [
-  { id: 'mars-exploration', label: 'MARS ARAÇLARI' },
-  { id: 'mars-map', label: 'MARS HARİTASI' },
-  { id: 'nasa-photo-archive', label: 'FOTOĞRAF ARŞİVİ' },
-  { id: 'rover-3d-lab', label: '3D ROVER LAB' },
-  { id: 'rover-comparison', label: 'KARŞILAŞTIRMA' },
-  { id: 'mission-simulation', label: 'GÖREV SİMÜLASYONU' },
-  { id: 'lunar-exploration', label: 'LUNAR EXPLORATION' },
-  { id: 'references', label: 'KAYNAKÇA' },
-];
 
 /**
  * Main landing experience of HVB HORIZON with smooth section navigation
@@ -34,8 +25,41 @@ const NAV_ITEMS: ReadonlyArray<{ id: SectionId; label: string }> = [
  * and the Scientific Bibliography (Kaynakça).
  */
 export function HomePage() {
+  const { t } = useLanguage();
   const [selectedRover, setSelectedRover] = useState<MarsRoverItem | null>(null);
   const [selectedLunarMission, setSelectedLunarMission] = useState<LunarMissionItem | null>(null);
+
+  const navItems: ReadonlyArray<{ id: SectionId; label: string }> = useMemo(
+    () => [
+      { id: 'mars-exploration', label: t.ui.nav.links.marsExploration.toUpperCase() },
+      { id: 'mars-map', label: t.ui.nav.links.marsMap.toUpperCase() },
+      { id: 'nasa-photo-archive', label: t.ui.nav.links.nasaPhotoArchive.toUpperCase() },
+      { id: 'rover-3d-lab', label: t.ui.nav.links.rover3dLab.toUpperCase() },
+      { id: 'rover-comparison', label: t.ui.nav.links.roverComparison.toUpperCase() },
+      { id: 'mission-simulation', label: t.ui.nav.links.missionSimulation.toUpperCase() },
+      { id: 'lunar-exploration', label: t.ui.nav.links.lunarExploration.toUpperCase() },
+      { id: 'spacecraft-quiz', label: t.ui.nav.links.spacecraftQuiz.toUpperCase() },
+      { id: 'references', label: t.ui.nav.links.references.toUpperCase() },
+    ],
+    [t]
+  );
+
+  const activeRover = useMemo(
+    () =>
+      selectedRover
+        ? (t.data.marsRovers.find((r) => r.id === selectedRover.id) ?? selectedRover)
+        : null,
+    [selectedRover, t]
+  );
+
+  const activeLunarMission = useMemo(
+    () =>
+      selectedLunarMission
+        ? (t.data.lunarMissions.find((m) => m.id === selectedLunarMission.id) ??
+          selectedLunarMission)
+        : null,
+    [selectedLunarMission, t]
+  );
 
   const scrollToSection = useCallback((sectionId: SectionId) => {
     const target = document.getElementById(sectionId);
@@ -63,11 +87,7 @@ export function HomePage() {
   return (
     <div className="home">
       <StarField />
-      <MarsPlanet />
-      <div className="home__veil" aria-hidden="true" />
-
-      {/* Hero viewport */}
-      <div id="hero" className="home__hero">
+      <MarsPlanet>
         <header className="home__header">
           <a
             href="#hero"
@@ -81,8 +101,8 @@ export function HomePage() {
             <BrandLogo />
           </a>
 
-          <nav className="home__nav" aria-label="Bölüm navigasyonu">
-            {NAV_ITEMS.map((navItem) => (
+          <nav className="home__nav" aria-label={t.ui.nav.mainAriaLabel}>
+            {navItems.map((navItem) => (
               <a
                 key={navItem.id}
                 href={`#${navItem.id}`}
@@ -96,6 +116,8 @@ export function HomePage() {
               </a>
             ))}
           </nav>
+
+          <LanguageSwitcher className="home__langSwitcher" />
         </header>
 
         <motion.main
@@ -104,9 +126,9 @@ export function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: 'easeOut' }}
         >
-          <h1 className="home__title">{HOME_CONTENT.title}</h1>
-          <p className="home__subtitle">{HOME_CONTENT.subtitle}</p>
-          <p className="home__description">{HOME_CONTENT.description}</p>
+          <h1 className="home__title">{t.ui.hero.title}</h1>
+          <p className="home__subtitle">{t.ui.hero.subtitle}</p>
+          <p className="home__description">{t.ui.hero.description}</p>
 
           <div className="home__actions">
             <a
@@ -117,7 +139,7 @@ export function HomePage() {
                 scrollToSection('mars-exploration');
               }}
             >
-              MARS'I KEŞFET
+              {t.ui.hero.ctaMars}
             </a>
             <a
               href="#lunar-exploration"
@@ -127,12 +149,12 @@ export function HomePage() {
                 scrollToSection('lunar-exploration');
               }}
             >
-              AY'I KEŞFET
+              {t.ui.hero.ctaLunar}
             </a>
           </div>
 
           {/* Quick Interactive Modules Strip */}
-          <div className="home__modulePills" aria-label="Etkileşimli keşif modülleri">
+          <div className="home__modulePills" aria-label={t.ui.hero.modulesAriaLabel}>
             <a
               href="#mars-map"
               className="home__modulePill"
@@ -141,7 +163,7 @@ export function HomePage() {
                 scrollToSection('mars-map');
               }}
             >
-              🗺️ İnteraktif Mars Haritası
+              🗺️ {t.ui.hero.pills.marsMap}
             </a>
             <a
               href="#nasa-photo-archive"
@@ -151,7 +173,7 @@ export function HomePage() {
                 scrollToSection('nasa-photo-archive');
               }}
             >
-              📸 NASA Fotoğraf Arşivi
+              📸 {t.ui.hero.pills.nasaPhotoArchive}
             </a>
             <a
               href="#rover-3d-lab"
@@ -161,7 +183,7 @@ export function HomePage() {
                 scrollToSection('rover-3d-lab');
               }}
             >
-              🔬 3D Rover Laboratuvarı
+              🔬 {t.ui.hero.pills.rover3dLab}
             </a>
             <a
               href="#rover-comparison"
@@ -171,7 +193,7 @@ export function HomePage() {
                 scrollToSection('rover-comparison');
               }}
             >
-              📊 Karşılaştırma Laboratuvarı
+              📊 {t.ui.hero.pills.roverComparison}
             </a>
             <a
               href="#mission-simulation"
@@ -181,7 +203,7 @@ export function HomePage() {
                 scrollToSection('mission-simulation');
               }}
             >
-              🚀 Görev Simülasyonu
+              🚀 {t.ui.hero.pills.missionSimulation}
             </a>
             <a
               href="#lunar-exploration"
@@ -191,7 +213,17 @@ export function HomePage() {
                 scrollToSection('lunar-exploration');
               }}
             >
-              🌕 3D Ay &amp; 9 Ay Görevi
+              🌕 {t.ui.hero.pills.lunarExploration}
+            </a>
+            <a
+              href="#spacecraft-quiz"
+              className="home__modulePill"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('spacecraft-quiz');
+              }}
+            >
+              🧠 {t.ui.hero.pills.spacecraftQuiz}
             </a>
             <a
               href="#references"
@@ -201,15 +233,15 @@ export function HomePage() {
                 scrollToSection('references');
               }}
             >
-              📚 Bilimsel Kaynakça
+              📚 {t.ui.hero.pills.references}
             </a>
           </div>
         </motion.main>
 
         <div className="home__heroFooter">
-          <p className="home__credit">{MARS_VISUAL_CREDIT}</p>
+          <p className="home__credit">{t.ui.hero.footer.credit}</p>
         </div>
-      </div>
+      </MarsPlanet>
 
       {/* Scrollable Exploration & Interactive Science Sections */}
       <MarsExplorationSection
@@ -225,13 +257,14 @@ export function HomePage() {
         onNavigateToSection={scrollToSection}
         onSelectLunarMission={setSelectedLunarMission}
       />
+      <SpacecraftQuizSection onNavigateToSection={scrollToSection} />
       <ReferencesSection onNavigateToSection={scrollToSection} />
 
       <footer className="home__footer">
         <div className="home__footerInner">
           <BrandLogo />
-          <nav className="home__footerLinks" aria-label="Alt bilgi bölüm bağlantıları">
-            {NAV_ITEMS.map((item) => (
+          <nav className="home__footerLinks" aria-label={t.ui.footer.quickLinksTitle}>
+            {navItems.map((item) => (
               <a
                 key={`footer-${item.id}`}
                 href={`#${item.id}`}
@@ -246,17 +279,17 @@ export function HomePage() {
             ))}
           </nav>
           <p className="home__credit">
-            HVB HORIZON · SILENT EXPLORERS — {MARS_VISUAL_CREDIT}
+            {t.ui.footer.copyright}
           </p>
         </div>
       </footer>
 
       {/* Dedicated Mars Rover Detail Screen Overlay */}
       <AnimatePresence>
-        {selectedRover ? (
+        {activeRover ? (
           <RoverDetailView
             key="rover-detail-modal"
-            rover={selectedRover}
+            rover={activeRover}
             onClose={handleCloseRoverDetail}
             onSelectRover={setSelectedRover}
           />
@@ -265,10 +298,10 @@ export function HomePage() {
 
       {/* Dedicated Lunar Mission Detail Screen Overlay */}
       <AnimatePresence>
-        {selectedLunarMission ? (
+        {activeLunarMission ? (
           <LunarMissionDetailView
             key="lunar-detail-modal"
-            mission={selectedLunarMission}
+            mission={activeLunarMission}
             onClose={handleCloseLunarDetail}
             onSelectMission={setSelectedLunarMission}
           />

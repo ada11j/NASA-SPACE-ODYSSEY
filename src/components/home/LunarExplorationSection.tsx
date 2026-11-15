@@ -1,7 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import { motion } from 'framer-motion';
-import { LUNAR_EXPLORATION_CONTENT } from '@/data/explorers';
-import { LUNAR_MISSIONS, LUNAR_SURFACE_LANDMARKS } from '@/data/lunarMissionsData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { LunarMissionId, LunarMissionItem, SectionId } from '@/types';
 
 const LazyMoonGlobeViewport = lazy(() => import('@/scenes/MoonGlobeViewport'));
@@ -13,32 +12,44 @@ interface LunarExplorationSectionProps {
 
 type LunarFilterKey = 'all' | 'soviet' | 'apollo' | 'china' | 'india';
 
-const FILTER_TABS: ReadonlyArray<{ key: LunarFilterKey; label: string }> = [
-  { key: 'all', label: 'Tümü (9 Görev)' },
-  { key: 'soviet', label: 'Luna & Lunokhod (SSCB · 3)' },
-  { key: 'apollo', label: 'Apollo LRV (NASA · 3)' },
-  { key: 'china', label: 'Chang’e & Yutu (CNSA · 2)' },
-  { key: 'india', label: 'Chandrayaan-3 (ISRO · 1)' },
-];
-
 export function LunarExplorationSection({
   onNavigateToSection,
   onSelectLunarMission,
 }: LunarExplorationSectionProps) {
+  const { lang, t } = useLanguage();
+  const lUi = t.ui.lunarExploration;
+  const gUi = t.ui.moonGlobe;
+  const lunarMissions = t.data.lunarMissions;
+  const lunarLandmarks = t.data.lunarSurfaceLandmarks;
+
+  const filterTabs: ReadonlyArray<{ key: LunarFilterKey; label: string }> = [
+    { key: 'all', label: lUi.filters.all },
+    {
+      key: 'soviet',
+      label: lang === 'en' ? 'Luna & Lunokhod (USSR · 3)' : 'Luna & Lunokhod (SSCB · 3)',
+    },
+    { key: 'apollo', label: lUi.filters.apolloLrv },
+    {
+      key: 'china',
+      label: lang === 'en' ? "Chang'e & Yutu (CNSA · 2)" : 'Chang’e & Yutu (CNSA · 2)',
+    },
+    { key: 'india', label: 'Chandrayaan-3 (ISRO · 1)' },
+  ];
+
   const [selectedMissionId, setSelectedMissionId] = useState<LunarMissionId>('apollo-15-lrv');
   const [autoRotateGlobe, setAutoRotateGlobe] = useState<boolean>(false);
   const [showSelenographicGrid, setShowSelenographicGrid] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<LunarFilterKey>('all');
 
   const selectedMission =
-    LUNAR_MISSIONS.find((m) => m.id === selectedMissionId) ?? LUNAR_MISSIONS[0];
+    lunarMissions.find((m) => m.id === selectedMissionId) ?? lunarMissions[0];
 
-  const filteredMissions = LUNAR_MISSIONS.filter((m) => {
+  const filteredMissions = lunarMissions.filter((m) => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === 'soviet') return m.country === 'SSCB';
-    if (activeFilter === 'apollo') return m.country === 'ABD';
-    if (activeFilter === 'china') return m.country === 'Çin';
-    if (activeFilter === 'india') return m.country === 'Hindistan';
+    if (activeFilter === 'soviet') return m.country === 'SSCB' || m.country === 'USSR';
+    if (activeFilter === 'apollo') return m.country === 'ABD' || m.country === 'USA';
+    if (activeFilter === 'china') return m.country === 'Çin' || m.country === 'China';
+    if (activeFilter === 'india') return m.country === 'Hindistan' || m.country === 'India';
     return true;
   });
 
@@ -63,15 +74,13 @@ export function LunarExplorationSection({
           transition={{ duration: 0.65, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow exploration-section__eyebrow--lunar">
-            {LUNAR_EXPLORATION_CONTENT.eyebrow} · 07 · 3D SELENOGRAFİK HARİTA &amp; 9 TARİHİ GÖREV
+            {lUi.eyebrow}
           </span>
           <h2 id="lunar-exploration-heading" className="exploration-section__title">
-            {LUNAR_EXPLORATION_CONTENT.title}
+            {lUi.title}
           </h2>
           <p className="exploration-section__subtitle exploration-section__subtitle--lunar">
-            Luna 9’un ilk yumuşak inişinden Sovyet Lunokhod gezicilerine, astronotların sürdüğü Apollo
-            Ay Taşıtlarından (LRV) Ay’ın uzak tarafındaki Yutu-2 ve güney kutbundaki Chandrayaan-3
-            Pragyan’a kadar 9 tarihi Ay yüzey görevini 3D Ay küresi üzerinde keşfedin.
+            {lUi.description}
           </p>
         </motion.div>
 
@@ -80,16 +89,21 @@ export function LunarExplorationSection({
           {/* Left: 3D Moon Globe Viewport */}
           <div className="lunar-3d-globeCard">
             <div className="lunar-3d-globeCard__toolbar">
-              <div className="lunar-3d-globeCard__hemisphereBtns" role="group" aria-label="Ay yarımküre odak noktaları">
+              <div className="lunar-3d-globeCard__hemisphereBtns" role="group" aria-label={lUi.globeSectionTitle}>
                 <button
                   type="button"
-                  className={`module-pill ${selectedMission.hemisphereLabel === 'Yakın Yüz (Near Side)' ? 'module-pill--active' : ''}`}
+                  className={`module-pill ${
+                    selectedMission.hemisphereLabel.includes('Near') ||
+                    selectedMission.hemisphereLabel.includes('Yakın')
+                      ? 'module-pill--active'
+                      : ''
+                  }`}
                   onClick={() => {
                     setAutoRotateGlobe(false);
                     setSelectedMissionId('apollo-15-lrv');
                   }}
                 >
-                  🌕 Yakın Yüz (Near Side)
+                  🌕 {gUi.viewNearSide}
                 </button>
                 <button
                   type="button"
@@ -99,7 +113,7 @@ export function LunarExplorationSection({
                     setSelectedMissionId('change-4-yutu-2');
                   }}
                 >
-                  🌑 Uzak Yüz (Chang’e 4)
+                  🌑 {gUi.viewFarSide}
                 </button>
                 <button
                   type="button"
@@ -109,7 +123,7 @@ export function LunarExplorationSection({
                     setSelectedMissionId('chandrayaan-3-pragyan');
                   }}
                 >
-                  🧭 Güney Kutbu (Chandrayaan-3)
+                  🧭 {gUi.viewSouthPole}
                 </button>
               </div>
 
@@ -119,14 +133,14 @@ export function LunarExplorationSection({
                   className={`module-pill ${autoRotateGlobe ? 'module-pill--active' : ''}`}
                   onClick={() => setAutoRotateGlobe((prev) => !prev)}
                 >
-                  {autoRotateGlobe ? '⏸ Dönüşü Durdur' : '↻ Otomatik Döndür'}
+                  {autoRotateGlobe ? `⏸ ${gUi.autoRotateOff}` : `↻ ${gUi.autoRotateOn}`}
                 </button>
                 <button
                   type="button"
                   className={`module-pill ${showSelenographicGrid ? 'module-pill--active' : ''}`}
                   onClick={() => setShowSelenographicGrid((prev) => !prev)}
                 >
-                  🌐 Ekvator Halkası
+                  🌐 {gUi.landmarksToggle}
                 </button>
               </div>
             </div>
@@ -135,7 +149,9 @@ export function LunarExplorationSection({
               <Suspense
                 fallback={
                   <div className="lab-3d-viewport__loading">
-                    3D Selenografik Ay Küresi ve Krater Rölyefi Yükleniyor...
+                    {lang === 'en'
+                      ? 'Loading 3D Selenographic Moon Globe & Crater Relief...'
+                      : '3D Selenografik Ay Küresi ve Krater Rölyefi Yükleniyor...'}
                   </div>
                 }
               >
@@ -152,8 +168,8 @@ export function LunarExplorationSection({
             </div>
 
             {/* Quick Landing Site Selector Bar Under the 3D Moon */}
-            <div className="lunar-site-pinBar" aria-label="Ay iniş noktaları hızlı seçim çubuğu">
-              {LUNAR_MISSIONS.map((m) => {
+            <div className="lunar-site-pinBar" aria-label={lUi.globeSectionTitle}>
+              {lunarMissions.map((m) => {
                 const isSelected = m.id === selectedMissionId;
                 return (
                   <button
@@ -187,7 +203,7 @@ export function LunarExplorationSection({
                   color: selectedMission.markerColor,
                 }}
               >
-                ● SEÇİLİ İNİŞ NOKTASI
+                ● {lUi.selectedMissionPanelBadge}
               </span>
               <span className="lunar-3d-inspector__hemi">
                 {selectedMission.hemisphereLabel}
@@ -199,7 +215,7 @@ export function LunarExplorationSection({
               📍 <strong>{selectedMission.landingSite}</strong> ({selectedMission.landingCoordinates})
             </p>
             <p className="lunar-3d-inspector__dates">
-              🗓️ İniş: <strong>{selectedMission.landingDate}</strong> · Süre: {selectedMission.durationLabel}
+              🗓️ {t.ui.lunarMissionDetail.landingDateLabel}: <strong>{selectedMission.landingDate}</strong> · {lUi.cardDurationLabel} {selectedMission.durationLabel}
             </p>
 
             <p className="lunar-3d-inspector__summary">{selectedMission.summary}</p>
@@ -220,7 +236,7 @@ export function LunarExplorationSection({
                 className="btn btn--primary"
                 onClick={() => handleOpenDossier(selectedMission)}
               >
-                GÖREV DETAYLARINI İNCELE →
+                {lUi.selectedMissionOpenModalBtn}
               </button>
               <a
                 href={selectedMission.sourceUrl}
@@ -228,23 +244,25 @@ export function LunarExplorationSection({
                 rel="noopener noreferrer"
                 className="archive-card__sourceLink"
               >
-                Resmi NASA NSSDCA / ALSJ Kaynağı ↗
+                {lang === 'en' ? 'Official NASA NSSDCA / ALSJ Source ↗' : 'Resmi NASA NSSDCA / ALSJ Kaynağı ↗'}
               </a>
             </div>
 
             {/* Major Lunar Maria & Craters Reference List */}
             <div className="lunar-landmarks-box">
               <span className="lunar-landmarks-box__heading">
-                BAŞLICA AY DENİZLERİ (MARIA) VE KRATER HAVZALARI
+                {lang === 'en'
+                  ? 'MAJOR LUNAR MARIA & CRATER BASINS'
+                  : 'BAŞLICA AY DENİZLERİ (MARIA) VE KRATER HAVZALARI'}
               </span>
               <div className="lunar-landmarks-box__list">
-                {LUNAR_SURFACE_LANDMARKS.map((lm) => (
+                {lunarLandmarks.map((lm) => (
                   <div key={lm.id} className="lunar-landmark-item">
                     <div className="lunar-landmark-item__top">
                       <strong>{lm.name}</strong>
                       <span>
-                        {Math.abs(lm.lat)}°{lm.lat >= 0 ? 'K' : 'G'}, {Math.abs(lm.lon)}°
-                        {lm.lon >= 0 ? 'D' : 'B'}
+                        {Math.abs(lm.lat)}°{lm.lat >= 0 ? (lang === 'en' ? 'N' : 'K') : (lang === 'en' ? 'S' : 'G')},{' '}
+                        {Math.abs(lm.lon)}°{lm.lon >= 0 ? (lang === 'en' ? 'E' : 'D') : (lang === 'en' ? 'W' : 'B')}
                       </span>
                     </div>
                     <p>{lm.detail}</p>
@@ -260,15 +278,17 @@ export function LunarExplorationSection({
           <div className="lunar-missions-catalog__header">
             <div>
               <span className="exploration-section__eyebrow exploration-section__eyebrow--lunar">
-                AY YÜZEY KÂŞİFLERİ KATALOĞU (1966–2023)
+                {lang === 'en' ? 'LUNAR SURFACE EXPLORERS CATALOG (1966–2023)' : 'AY YÜZEY KÂŞİFLERİ KATALOĞU (1966–2023)'}
               </span>
               <h3 className="lunar-missions-catalog__title">
-                9 Tarihi Ay İniş Aracı ve Gezicisi (Lander &amp; Rover)
+                {lang === 'en'
+                  ? '9 Historic Lunar Landers & Rovers'
+                  : '9 Tarihi Ay İniş Aracı ve Gezicisi (Lander & Rover)'}
               </h3>
             </div>
 
-            <div className="module-toolbar__group" role="tablist" aria-label="Ay görevlerini ülkeye ve programa göre filtrele">
-              {FILTER_TABS.map((tab) => (
+            <div className="module-toolbar__group" role="tablist" aria-label={lUi.filterTabsAria}>
+              {filterTabs.map((tab) => (
                 <button
                   key={tab.key}
                   type="button"
@@ -285,7 +305,7 @@ export function LunarExplorationSection({
 
           <div className="rover-grid lunar-missions-grid">
             {filteredMissions.map((mission, index) => {
-              const isActive = mission.statusLabel === 'AKTİF / UZATILMIŞ GÖREV';
+              const isActive = mission.statusLabel === lUi.activeStatusMatch;
               return (
                 <motion.article
                   key={mission.id}
@@ -296,7 +316,7 @@ export function LunarExplorationSection({
                   transition={{ duration: 0.5, delay: index * 0.05, ease: 'easeOut' }}
                   tabIndex={0}
                   role="button"
-                  aria-label={`${mission.name} görev detaylarını aç`}
+                  aria-label={`${mission.name} — ${lUi.cardOpenDetailBtn}`}
                   onClick={() => handleOpenDossier(mission)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -341,7 +361,7 @@ export function LunarExplorationSection({
                     </div>
 
                     <p className="rover-card__site">
-                      <span className="rover-card__siteLabel">İniş Bölgesi:</span>{' '}
+                      <span className="rover-card__siteLabel">{lUi.cardLandingSiteLabel}</span>{' '}
                       {mission.landingSite} ({mission.landingCoordinates})
                     </p>
 
@@ -349,10 +369,10 @@ export function LunarExplorationSection({
 
                     <div className="lunar-card__miniSpecs">
                       <span>
-                        <strong>İniş:</strong> {mission.landingDate.split(' (')[0]}
+                        <strong>{t.ui.lunarMissionDetail.landingDateLabel}:</strong> {mission.landingDate.split(' (')[0]}
                       </span>
                       <span>
-                        <strong>Tür:</strong> {mission.missionType}
+                        <strong>{lang === 'en' ? 'Type:' : 'Tür:'}</strong> {mission.missionType}
                       </span>
                     </div>
 
@@ -361,7 +381,7 @@ export function LunarExplorationSection({
                         [{mission.mediaKindLabel}] · {mission.imageCredit}
                       </p>
                       <span className="rover-card__cta">
-                        <span>DETAYLARI İNCELE</span>
+                        <span>{lUi.cardOpenDetailBtn}</span>
                         <span className="rover-card__ctaArrow" aria-hidden="true">
                           →
                         </span>
@@ -378,19 +398,20 @@ export function LunarExplorationSection({
         <div className="lunar-chronology-block">
           <div className="lunar-chronology-block__header">
             <span className="exploration-section__eyebrow exploration-section__eyebrow--lunar">
-              KRONOLOJİK ZAMAN ÇİZELGESİ · 1966 – 2023
+              {lang === 'en' ? 'CHRONOLOGICAL TIMELINE · 1966 – 2023' : 'KRONOLOJİK ZAMAN ÇİZELGESİ · 1966 – 2023'}
             </span>
             <h3 className="lunar-missions-catalog__title">
-              Ay Yüzey Keşiflerinin Tarihi Evrimi
+              {lang === 'en' ? 'Historic Evolution of Lunar Surface Exploration' : 'Ay Yüzey Keşiflerinin Tarihi Evrimi'}
             </h3>
             <p className="exploration-section__subtitle exploration-section__subtitle--lunar">
-              Bir zaman düğümüne tıklayarak 3D Ay küresini o görevin iniş koordinatlarına odaklayabilir
-              veya tam görev dosyasını açabilirsiniz.
+              {lang === 'en'
+                ? 'Click a timeline node to focus the 3D Moon globe on that landing site or open the full mission dossier.'
+                : 'Bir zaman düğümüne tıklayarak 3D Ay küresini o görevin iniş koordinatlarına odaklayabilir veya tam görev dosyasını açabilirsiniz.'}
             </p>
           </div>
 
           <ol className="lunar-chronology-list">
-            {LUNAR_MISSIONS.map((mission, idx) => {
+            {lunarMissions.map((mission, idx) => {
               const isSelected = mission.id === selectedMissionId;
               return (
                 <li
@@ -424,14 +445,14 @@ export function LunarExplorationSection({
                         setSelectedMissionId(mission.id);
                       }}
                     >
-                      🌕 3D Kürede Göster
+                      🌕 {lang === 'en' ? 'Focus on 3D Globe' : '3D Kürede Göster'}
                     </button>
                     <button
                       type="button"
                       className="module-pill module-pill--active"
                       onClick={() => handleOpenDossier(mission)}
                     >
-                      📄 Görev Dosyasını Aç →
+                      📄 {lUi.selectedMissionOpenModalBtn}
                     </button>
                   </div>
                 </li>
@@ -443,14 +464,14 @@ export function LunarExplorationSection({
         {onNavigateToSection ? (
           <div className="exploration-section__footerNav">
             <a
-              href="#references"
+              href="#spacecraft-quiz"
               className="section-jump-link"
               onClick={(event) => {
                 event.preventDefault();
-                onNavigateToSection('references');
+                onNavigateToSection('spacecraft-quiz');
               }}
             >
-              <span>BİLİMSEL KAYNAKÇA BÖLÜMÜNE İLERLE</span>
+              <span>{t.ui.nav.links.spacecraftQuiz}</span>
               <span aria-hidden="true">↓</span>
             </a>
             <a
@@ -461,7 +482,7 @@ export function LunarExplorationSection({
                 onNavigateToSection('hero');
               }}
             >
-              <span>ANA EKRANA DÖN</span>
+              <span>{t.ui.lunarMissionDetail.backToMain}</span>
               <span aria-hidden="true">↑</span>
             </a>
           </div>

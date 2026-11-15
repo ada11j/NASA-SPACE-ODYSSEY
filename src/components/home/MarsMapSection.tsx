@@ -1,10 +1,7 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { motion } from 'framer-motion';
-import {
-  MARS_GLOBAL_LANDMARKS,
-  MARS_ROVER_MAP_PROFILES,
-} from '@/data/marsMapData';
-import type { MarsMapWaypoint, MarsRoverMapProfile, RoverId } from '@/types';
+import { useLanguage } from '@/context/LanguageContext';
+import type { MarsRoverMapProfile, RoverId } from '@/types';
 
 type MapMode = 'global' | 'regional';
 
@@ -20,14 +17,25 @@ function latLonToGlobalSvg(lat: number, lonEast: number): { x: number; y: number
 }
 
 export function MarsMapSection() {
+  const { lang, t } = useLanguage();
+  const mUi = t.ui.marsMap;
+  const mapProfiles = t.data.marsRoverMapProfiles;
+  const globalLandmarks = t.data.marsGlobalLandmarks;
+
   const [mapMode, setMapMode] = useState<MapMode>('global');
   const [activeRoverId, setActiveRoverId] = useState<RoverId | 'all'>('all');
-  const [selectedProfile, setSelectedProfile] = useState<MarsRoverMapProfile>(
-    MARS_ROVER_MAP_PROFILES[1] // Default focus on Opportunity (MER-B)
+  const [selectedProfileId, setSelectedProfileId] = useState<RoverId>(
+    mapProfiles[1]?.roverId ?? mapProfiles[0].roverId
   );
-  const [selectedWaypoint, setSelectedWaypoint] = useState<MarsMapWaypoint>(
-    MARS_ROVER_MAP_PROFILES[1].waypoints[0]
+  const [selectedWaypointId, setSelectedWaypointId] = useState<string>(
+    mapProfiles[1]?.waypoints[0]?.id ?? mapProfiles[0].waypoints[0].id
   );
+
+  const selectedProfile =
+    mapProfiles.find((p) => p.roverId === selectedProfileId) ?? mapProfiles[0];
+  const selectedWaypoint =
+    selectedProfile.waypoints.find((w) => w.id === selectedWaypointId) ??
+    selectedProfile.waypoints[0];
 
   // Interactive Zoom & Pan state
   const [zoom, setZoom] = useState<number>(1);
@@ -56,8 +64,8 @@ export function MarsMapSection() {
   };
 
   const handleFocusRoverOnGlobal = (profile: MarsRoverMapProfile) => {
-    setSelectedProfile(profile);
-    setSelectedWaypoint(profile.waypoints[0]);
+    setSelectedProfileId(profile.roverId);
+    setSelectedWaypointId(profile.waypoints[0].id);
     if (mapMode === 'global') {
       const { x, y } = latLonToGlobalSvg(profile.lat, profile.lonEast);
       const targetZoom = 2.4;
@@ -70,8 +78,8 @@ export function MarsMapSection() {
   };
 
   const handleSwitchToRegional = (profile: MarsRoverMapProfile) => {
-    setSelectedProfile(profile);
-    setSelectedWaypoint(profile.waypoints[0]);
+    setSelectedProfileId(profile.roverId);
+    setSelectedWaypointId(profile.waypoints[0].id);
     setActiveRoverId(profile.roverId);
     setMapMode('regional');
     setZoom(1);
@@ -111,8 +119,8 @@ export function MarsMapSection() {
 
   const visibleProfiles =
     activeRoverId === 'all'
-      ? MARS_ROVER_MAP_PROFILES
-      : MARS_ROVER_MAP_PROFILES.filter((p) => p.roverId === activeRoverId);
+      ? mapProfiles
+      : mapProfiles.filter((p) => p.roverId === activeRoverId);
 
   return (
     <section
@@ -129,24 +137,22 @@ export function MarsMapSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            GEZEGEN HARİTASI VE GÖREV ROTALARI · 02
+            {mUi.eyebrow}
           </span>
           <h2 id="mars-map-heading" className="exploration-section__title">
-            İNTERAKTİF MARS HARİTASI
+            {mUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            İniş Koordinatları, Krater İçi Görev Rotaları ve Bilimsel Keşif Noktaları
+            {mUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            NASA PDS ve IAU/USGS gezegen merkezli (planetocentric) koordinat sistemine dayalı
-            etkileşimli harita. Haritayı fare veya dokunmatik ekranla sürükleyebilir,
-            yakınlaştırabilir ve işaretçilere tıklayarak bilimsel bulguları inceleyebilirsiniz.
+            {mUi.description}
           </p>
         </motion.div>
 
         {/* Top Control Bar: Mode Switcher + Rover Legend Filters */}
-        <div className="mars-map-toolbar" role="region" aria-label="Harita kontrolleri">
-          <div className="mars-map-toolbar__modes" role="tablist" aria-label="Harita ölçek modu">
+        <div className="mars-map-toolbar" role="region" aria-label={mUi.roverSelectorAria}>
+          <div className="mars-map-toolbar__modes" role="tablist" aria-label={mUi.roverSelectorAria}>
             <button
               type="button"
               role="tab"
@@ -159,7 +165,7 @@ export function MarsMapSection() {
                 handleResetView();
               }}
             >
-              🌐 KÜRESEL MARS HARİTASI (0°–360°D)
+              🌐 {mUi.viewModeGlobal}
             </button>
             <button
               type="button"
@@ -173,11 +179,11 @@ export function MarsMapSection() {
                 handleResetView();
               }}
             >
-              🧭 BÖLGESEL GÖREV ROTASI & KEŞİFLER
+              🧭 {mUi.viewModeRegional}
             </button>
           </div>
 
-          <div className="mars-map-toolbar__rovers" aria-label="Rover filtresi">
+          <div className="mars-map-toolbar__rovers" aria-label={mUi.roverSelectorAria}>
             {mapMode === 'global' && (
               <button
                 type="button"
@@ -189,10 +195,10 @@ export function MarsMapSection() {
                   handleResetView();
                 }}
               >
-                Tüm Araçlar (4)
+                {lang === 'en' ? 'All Rovers (4)' : 'Tüm Araçlar (4)'}
               </button>
             )}
-            {MARS_ROVER_MAP_PROFILES.map((profile) => {
+            {mapProfiles.map((profile) => {
               const isSelected =
                 mapMode === 'regional'
                   ? selectedProfile.roverId === profile.roverId
@@ -209,8 +215,8 @@ export function MarsMapSection() {
                     borderColor: isSelected ? profile.color : undefined,
                   }}
                   onClick={() => {
-                    setSelectedProfile(profile);
-                    setSelectedWaypoint(profile.waypoints[0]);
+                    setSelectedProfileId(profile.roverId);
+                    setSelectedWaypointId(profile.waypoints[0].id);
                     if (mapMode === 'global') {
                       setActiveRoverId(profile.roverId);
                       handleFocusRoverOnGlobal(profile);
@@ -239,21 +245,21 @@ export function MarsMapSection() {
               <div className="mars-map-stage__scaleInfo">
                 <span className="mars-map-stage__badge">
                   {mapMode === 'global'
-                    ? 'EŞDİKDÖRTGENSEL PROJEKSİYON (IAU MOLA REFERANSI)'
-                    : `${selectedProfile.craterName.toUpperCase()} GÖREV ROTASI`}
+                    ? mUi.globalTitlePrefix
+                    : `${selectedProfile.craterName.toUpperCase()} — ${mUi.regionalTitlePrefix}`}
                 </span>
                 <span className="mars-map-stage__sub">
                   {mapMode === 'global'
-                    ? 'İniş noktasına tıklayarak bilgi kartını açın veya bölgesel rotaya geçin'
+                    ? mUi.inspectorIdleHint
                     : selectedProfile.regionalScaleLabel}
                 </span>
               </div>
 
-              <div className="mars-map-stage__zoomControls" aria-label="Yakınlaştırma kontrolleri">
+              <div className="mars-map-stage__zoomControls" aria-label="Zoom controls">
                 <button
                   type="button"
                   className="mars-zoom-btn"
-                  aria-label="Uzaklaştır"
+                  aria-label={lang === 'en' ? 'Zoom out' : 'Uzaklaştır'}
                   onClick={() => handleZoomChange(-0.45)}
                   disabled={zoom <= 1}
                 >
@@ -263,7 +269,7 @@ export function MarsMapSection() {
                 <button
                   type="button"
                   className="mars-zoom-btn"
-                  aria-label="Yakınlaştır"
+                  aria-label={lang === 'en' ? 'Zoom in' : 'Yakınlaştır'}
                   onClick={() => handleZoomChange(0.45)}
                   disabled={zoom >= 4.5}
                 >
@@ -274,7 +280,7 @@ export function MarsMapSection() {
                   className="mars-zoom-btn mars-zoom-btn--reset"
                   onClick={handleResetView}
                 >
-                  Sıfırla
+                  {lang === 'en' ? 'Reset' : 'Sıfırla'}
                 </button>
               </div>
             </div>
@@ -385,7 +391,7 @@ export function MarsMapSection() {
                               fontSize="10"
                               fontFamily="monospace"
                             >
-                              {lat === 0 ? '0° EKVATOR' : `${Math.abs(lat)}°${lat > 0 ? 'K' : 'G'}`}
+                              {lat === 0 ? mUi.equatorLabel : `${Math.abs(lat)}°${lat > 0 ? (lang === 'en' ? 'N' : 'K') : (lang === 'en' ? 'S' : 'G')}`}
                             </text>
                           </g>
                         );
@@ -409,7 +415,7 @@ export function MarsMapSection() {
                               fontSize="10"
                               fontFamily="monospace"
                             >
-                              {lon}°D
+                              {lon}°{lang === 'en' ? 'E' : 'D'}
                             </text>
                           </g>
                         );
@@ -417,7 +423,7 @@ export function MarsMapSection() {
                     </g>
 
                     {/* Global Reference Landmarks */}
-                    {MARS_GLOBAL_LANDMARKS.map((landmark) => {
+                    {globalLandmarks.map((landmark) => {
                       const { x, y } = latLonToGlobalSvg(landmark.lat, landmark.lonEast);
                       return (
                         <g key={landmark.id} transform={`translate(${x}, ${y})`} opacity="0.72">
@@ -448,8 +454,8 @@ export function MarsMapSection() {
                           className="mars-map-pin"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedProfile(profile);
-                            setSelectedWaypoint(profile.waypoints[0]);
+                            setSelectedProfileId(profile.roverId);
+                            setSelectedWaypointId(profile.waypoints[0].id);
                           }}
                         >
                           <circle
@@ -575,7 +581,7 @@ export function MarsMapSection() {
                           className="mars-map-pin"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedWaypoint(wp);
+                            setSelectedWaypointId(wp.id);
                           }}
                         >
                           {isActiveWp && (
@@ -652,18 +658,18 @@ export function MarsMapSection() {
               <div className="mars-map-legend">
                 <span className="mars-map-legend__item">
                   <span className="mars-map-legend__dot mars-map-legend__dot--landing" />
-                  İniş Noktası
+                  {mUi.legendLanding}
                 </span>
                 <span className="mars-map-legend__item">
                   <span
                     className="mars-map-legend__dot"
                     style={{ backgroundColor: selectedProfile.color }}
                   />
-                  Bilimsel Keşif Noktası
+                  {mUi.legendDiscovery}
                 </span>
                 <span className="mars-map-legend__item">
                   <span className="mars-map-legend__line" style={{ backgroundColor: selectedProfile.color }} />
-                  Görev Rotası ({selectedProfile.totalTraverseKm} km)
+                  {mUi.traverseLineLabel} ({selectedProfile.totalTraverseKm} km)
                 </span>
               </div>
 
@@ -673,7 +679,7 @@ export function MarsMapSection() {
                   className="mars-map-switchAction"
                   onClick={() => handleSwitchToRegional(selectedProfile)}
                 >
-                  {selectedProfile.roverName} Rota ve Keşif Haritasını Aç →
+                  {selectedProfile.roverName} — {mUi.viewModeRegional} →
                 </button>
               ) : (
                 <button
@@ -685,7 +691,7 @@ export function MarsMapSection() {
                     handleResetView();
                   }}
                 >
-                  ← Küresel Mars Haritasına Dön
+                  ← {mUi.viewModeGlobal}
                 </button>
               )}
             </div>
@@ -694,7 +700,7 @@ export function MarsMapSection() {
           {/* Right Discovery & Telemetry Inspector Card */}
           <aside
             className="mars-map-inspector"
-            aria-label="Seçili keşif noktası detay kartı"
+            aria-label={mUi.activeWaypointBadge}
           >
             <div
               className="mars-map-inspector__roverHeader"
@@ -712,7 +718,7 @@ export function MarsMapSection() {
                   {selectedProfile.roverName}
                 </span>
                 <span className="mars-map-inspector__traverse">
-                  Toplam Rota: {selectedProfile.totalTraverseKm} km
+                  {mUi.totalTraversePrefix} {selectedProfile.totalTraverseKm} km
                 </span>
               </div>
 
@@ -720,7 +726,7 @@ export function MarsMapSection() {
                 {selectedProfile.craterName}
               </h3>
               <p className="mars-map-inspector__coords">
-                İniş Koordinatı: <strong>{selectedProfile.coordinateText}</strong> ·{' '}
+                {mUi.coordinatesLabel}: <strong>{selectedProfile.coordinateText}</strong> ·{' '}
                 {selectedProfile.elevationText}
               </p>
             </div>
@@ -728,7 +734,7 @@ export function MarsMapSection() {
             {/* Waypoint Selector Strip */}
             <div className="mars-map-inspector__waypointList">
               <span className="mars-map-inspector__sectionLabel">
-                ROTA DURAKLARI VE KEŞİF İŞARETÇİLERİ ({selectedProfile.waypoints.length})
+                {mUi.waypointListTitlePrefix} ({selectedProfile.waypoints.length})
               </span>
               <div className="mars-map-inspector__StepPills">
                 {selectedProfile.waypoints.map((wp, idx) => {
@@ -744,7 +750,7 @@ export function MarsMapSection() {
                         borderColor: isCurrent ? selectedProfile.color : undefined,
                       }}
                       onClick={() => {
-                        setSelectedWaypoint(wp);
+                        setSelectedWaypointId(wp.id);
                         if (mapMode === 'global') {
                           setMapMode('regional');
                           handleResetView();
@@ -763,11 +769,7 @@ export function MarsMapSection() {
             <div className="mars-discovery-card">
               <div className="mars-discovery-card__meta">
                 <span className="mars-discovery-card__kind">
-                  {selectedWaypoint.kind === 'landing'
-                    ? 'İNİŞ İSTASYONU'
-                    : selectedWaypoint.kind === 'discovery'
-                    ? 'BİLİMSEL KEŞİF NOKTASI'
-                    : 'GÖREV DÖNÜM NOKTASI'}
+                  {mUi.waypointKinds[selectedWaypoint.kind]}
                 </span>
                 <span className="mars-discovery-card__sol">
                   {selectedWaypoint.sol}
@@ -780,15 +782,15 @@ export function MarsMapSection() {
 
               <div className="mars-discovery-card__coordsRow">
                 <span>
-                  Koordinat:{' '}
+                  {mUi.coordinatesLabel}:{' '}
                   <strong>
                     {Math.abs(selectedWaypoint.lat).toFixed(4)}°
-                    {selectedWaypoint.lat >= 0 ? 'K' : 'G'},{' '}
-                    {selectedWaypoint.lonEast.toFixed(4)}°D
+                    {selectedWaypoint.lat >= 0 ? (lang === 'en' ? 'N' : 'K') : (lang === 'en' ? 'S' : 'G')},{' '}
+                    {selectedWaypoint.lonEast.toFixed(4)}°{lang === 'en' ? 'E' : 'D'}
                   </strong>
                 </span>
                 <span>
-                  Rakım: <strong>{selectedWaypoint.elevationMeters}</strong>
+                  {mUi.elevationLabel}: <strong>{selectedWaypoint.elevationMeters}</strong>
                 </span>
               </div>
 
@@ -797,19 +799,19 @@ export function MarsMapSection() {
               </p>
 
               <div className="mars-discovery-card__findingBox">
-                <span>BİLİMSEL BULGU</span>
+                <span>{mUi.scientificFindingTitle}</span>
                 <p>{selectedWaypoint.scientificFinding}</p>
               </div>
 
               <div className="mars-discovery-card__source">
-                <span>Kaynak: {selectedWaypoint.sourceLabel}</span>
+                <span>{mUi.sourceVerifyPrefix} {selectedWaypoint.sourceLabel}</span>
                 <a
                   href={selectedWaypoint.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mars-discovery-card__link"
                 >
-                  Resmi NASA/JPL Kaynağı ↗
+                  {lang === 'en' ? 'Official NASA/JPL Source ↗' : 'Resmi NASA/JPL Kaynağı ↗'}
                 </a>
               </div>
             </div>

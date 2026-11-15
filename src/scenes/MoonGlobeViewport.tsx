@@ -11,7 +11,7 @@ import {
   Vector3,
   type Group,
 } from 'three';
-import { LUNAR_MISSIONS } from '@/data/lunarMissionsData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { LunarMissionId, LunarMissionItem } from '@/types';
 import { generateMoonTextures } from '@/utils/moonTexture';
 
@@ -36,10 +36,12 @@ function latLonToCartesian(latDeg: number, lonDeg: number, radius: number): [num
 }
 
 interface InteractiveMoonSphereProps extends MoonGlobeViewportProps {
+  missions: readonly LunarMissionItem[];
   onHoverMission: (mission: LunarMissionItem | null) => void;
 }
 
 function InteractiveMoonSphere({
+  missions,
   selectedMissionId,
   autoRotate,
   showLandmarks,
@@ -77,13 +79,13 @@ function InteractiveMoonSphere({
 
   // Whenever selectedMissionId changes, orient the globe so the landing site faces toward the camera (+X / +Z view)
   useEffect(() => {
-    const mission = LUNAR_MISSIONS.find((m) => m.id === selectedMissionId);
+    const mission = missions.find((m) => m.id === selectedMissionId);
     if (!mission) return;
     // Camera is at [3.1, 0.85, 2.2] (azimuth angle ~ 0.62 rad from +X toward +Z)
     const cameraAzimuth = Math.atan2(2.2, 3.1);
     const siteLonRad = (mission.lon * Math.PI) / 180;
     targetRotationY.current = siteLonRad - cameraAzimuth;
-  }, [selectedMissionId]);
+  }, [missions, selectedMissionId]);
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.1);
@@ -155,7 +157,7 @@ function InteractiveMoonSphere({
       )}
 
       {/* 3D Landing Site Markers for all 9 Lunar Missions */}
-      {LUNAR_MISSIONS.map((mission) => {
+      {missions.map((mission) => {
         const isSelected = mission.id === selectedMissionId;
         const pos = latLonToCartesian(mission.lat, mission.lon, MOON_RADIUS * 1.012);
         const normal = new Vector3(pos[0], pos[1], pos[2]).normalize();
@@ -225,11 +227,14 @@ function InteractiveMoonSphere({
 }
 
 export function MoonGlobeViewport(props: MoonGlobeViewportProps) {
+  const { t } = useLanguage();
+  const gUi = t.ui.moonGlobe;
+  const missions = t.data.lunarMissions;
   const [hoveredMission, setHoveredMission] = useState<LunarMissionItem | null>(null);
   const activeMission =
     hoveredMission ??
-    LUNAR_MISSIONS.find((m) => m.id === props.selectedMissionId) ??
-    LUNAR_MISSIONS[0];
+    missions.find((m) => m.id === props.selectedMissionId) ??
+    missions[0];
 
   return (
     <div className="moon-globe-viewport">
@@ -241,6 +246,7 @@ export function MoonGlobeViewport(props: MoonGlobeViewportProps) {
 
           <InteractiveMoonSphere
             {...props}
+            missions={missions}
             onHoverMission={setHoveredMission}
           />
 
@@ -256,20 +262,20 @@ export function MoonGlobeViewport(props: MoonGlobeViewportProps) {
       {/* Live Selenographic HUD Overlay inside the 3D Viewport */}
       <div className="moon-globe-hud" aria-live="polite">
         <div className="moon-globe-hud__top">
-          <span className="moon-globe-hud__badge">3D SELENOGRAFİK AY KÜRESİ · İNTERAKTİF</span>
+          <span className="moon-globe-hud__badge">{gUi.hudBadge}</span>
           <span className="moon-globe-hud__coords">
             {activeMission.landingCoordinates} · {activeMission.hemisphereLabel}
           </span>
         </div>
         <div className="moon-globe-hud__bottom">
           <div>
-            <span className="moon-globe-hud__label">SEÇİLİ İNİŞ BÖLGESİ</span>
+            <span className="moon-globe-hud__label">{t.ui.lunarExploration.selectedMissionPanelBadge}</span>
             <strong className="moon-globe-hud__site">
               {activeMission.name} — {activeMission.landingSite}
             </strong>
           </div>
           <span className="moon-globe-hud__hint">
-            Fareyle Döndür &amp; Yakınlaştır · İniş Noktasına Tıkla
+            {gUi.hudHint}
           </span>
         </div>
       </div>

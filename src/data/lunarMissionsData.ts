@@ -3,7 +3,7 @@ import type { LunarMissionItem } from '@/types';
 export interface LunarSurfaceLandmark {
   id: string;
   name: string;
-  kind: 'Mare (Bazaltik Deniz)' | 'Krater' | 'Havza / Dağlık Bölge';
+  kind: string;
   lat: number;
   lon: number;
   detail: string;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { REFERENCE_CATEGORIES, REFERENCE_ITEMS } from '@/data/referencesData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { ReferenceCategoryId, SectionId } from '@/types';
 
 interface ReferencesSectionProps {
@@ -8,12 +8,17 @@ interface ReferencesSectionProps {
 }
 
 export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProps) {
+  const { t } = useLanguage();
+  const rUi = t.ui.references;
+  const referenceCategories = t.data.referenceCategories;
+  const referenceItems = t.data.referenceItems;
+
   const [selectedCategory, setSelectedCategory] = useState<ReferenceCategoryId | 'all'>('all');
 
   const visibleCategories =
     selectedCategory === 'all'
-      ? REFERENCE_CATEGORIES
-      : REFERENCE_CATEGORIES.filter((cat) => cat.id === selectedCategory);
+      ? referenceCategories
+      : referenceCategories.filter((cat) => cat.id === selectedCategory);
 
   return (
     <section
@@ -33,19 +38,16 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
           transition={{ duration: 0.65, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            BİLİMSEL DOĞRULAMA VE AKADEMİK ATIF DİZİNİ · 08
+            {rUi.eyebrow}
           </span>
           <h2 id="references-heading" className="exploration-section__title">
-            KAYNAKÇA &amp; VERİ ARŞİVİ
+            {rUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            Projede Kullanılan Resmi NASA Görev Sayfaları, Görsel Arşivler, Kurumsal Bilim Portalları
-            ve 3D Modelleme Referansları
+            {rUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            HVB HORIZON — SILENT EXPLORERS platformunda yer alan tüm görev tarihleri, iniş
-            koordinatları, bilimsel cihaz verileri, gerçek görev fotoğrafları ve prosedürel 3D model
-            dokümantasyonu aşağıda kategorilerine göre şeffaf biçimde listelenmiştir.
+            {rUi.description}
           </p>
         </motion.div>
 
@@ -53,7 +55,7 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
         <div
           className="module-toolbar"
           role="tablist"
-          aria-label="Kaynakça kategorilerini filtrele"
+          aria-label={rUi.title}
         >
           <div className="module-toolbar__group">
             <button
@@ -63,10 +65,10 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
               className={`module-pill ${selectedCategory === 'all' ? 'module-pill--active' : ''}`}
               onClick={() => setSelectedCategory('all')}
             >
-              Tüm Kaynaklar ({REFERENCE_ITEMS.length})
+              {rUi.filterAll} ({referenceItems.length})
             </button>
-            {REFERENCE_CATEGORIES.map((category) => {
-              const count = REFERENCE_ITEMS.filter((it) => it.categoryId === category.id).length;
+            {referenceCategories.map((category) => {
+              const count = referenceItems.filter((it) => it.categoryId === category.id).length;
               return (
                 <button
                   key={category.id}
@@ -88,7 +90,7 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
         {/* Grouped Reference Categories */}
         <div className="references-categories-stack">
           {visibleCategories.map((category) => {
-            const items = REFERENCE_ITEMS.filter((item) => item.categoryId === category.id);
+            const items = referenceItems.filter((item) => item.categoryId === category.id);
             return (
               <div key={category.id} className="references-category-block">
                 <div className="references-category-block__header">
@@ -105,7 +107,7 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
                       <div className="reference-card__top">
                         <span className="reference-card__badge">{ref.badge}</span>
                         <span className="reference-card__access">
-                          Erişim Tarihi: {ref.accessDate}
+                          {rUi.accessDateLabel} {ref.accessDate}
                         </span>
                       </div>
 
@@ -114,7 +116,7 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
                       <p className="reference-card__desc">{ref.description}</p>
 
                       <div className="reference-card__usedIn">
-                        <span className="reference-card__usedInLabel">Kullanıldığı Bölümler:</span>
+                        <span className="reference-card__usedInLabel">{rUi.usedInLabel}</span>
                         <div className="reference-card__tags">
                           {ref.usedInSections.map((sec) => (
                             <span key={sec} className="reference-card__tagPill">
@@ -153,7 +155,7 @@ export function ReferencesSection({ onNavigateToSection }: ReferencesSectionProp
                 onNavigateToSection('hero');
               }}
             >
-              <span>ANA EKRANA DÖN</span>
+              <span>{t.ui.lunarMissionDetail.backToMain}</span>
               <span aria-hidden="true">↑</span>
             </a>
           </div>

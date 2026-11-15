@@ -1,46 +1,51 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ROVER_COMPARISON_PROFILES } from '@/data/roverComparisonData';
+import { useLanguage } from '@/context/LanguageContext';
 import type { RoverId } from '@/types';
 
 type ChartMetricKey = 'massKg' | 'distanceKm' | 'actualSol' | 'powerCapacityWatts';
 
-const CHART_METRIC_META: Record<
-  ChartMetricKey,
-  {
-    title: string;
-    unit: string;
-    maxVal: number;
-    note: string;
-  }
-> = {
-  massKg: {
-    title: 'Yüzey Gezici Kütlesi',
-    unit: 'kg',
-    maxVal: 1100,
-    note: 'Fırlatma ve iniş kalkanı hariç Mars yüzeyinde hareket eden gezici kütlesi.',
-  },
-  distanceKm: {
-    title: 'Kat Edilen Toplam Mesafe',
-    unit: 'km',
-    maxVal: 50,
-    note: 'Spirit ve Opportunity nihai odometri değeridir; Curiosity ve Perseverance aktif görevde ilerlemeye devam etmektedir.',
-  },
-  actualSol: {
-    title: 'Aktif Yüzey Görev Süresi',
-    unit: 'Sol (Mars Günü)',
-    maxVal: 5500,
-    note: '1 Sol = 24 saat 39 dakika 35 saniye. Planlanan sürelerle (90 Sol / 668 Sol) birlikte değerlendirilmelidir.',
-  },
-  powerCapacityWatts: {
-    title: 'Nominal Elektrik Güç Kapasitesi',
-    unit: 'Watt',
-    maxVal: 160,
-    note: 'MER araçları yalnızca öğle güneşinde 140 W tepe güce ulaşır (~300–900 Wh/Sol); MMRTG nükleer araçlar ise gece-gündüz 24 saat ~110 W (~2.700 Wh/Sol) sürekli elektrik üretir.',
-  },
-};
-
 export function RoverComparisonSection() {
+  const { lang, t } = useLanguage();
+  const cUi = t.ui.roverComparison;
+  const comparisonProfiles = t.data.roverComparisonProfiles;
+  const numLocale = lang === 'en' ? 'en-US' : 'tr-TR';
+
+  const chartMetricMeta: Record<
+    ChartMetricKey,
+    {
+      title: string;
+      unit: string;
+      maxVal: number;
+      note: string;
+    }
+  > = {
+    massKg: {
+      title: cUi.metrics.mass.title,
+      unit: cUi.metrics.mass.unit,
+      maxVal: 1100,
+      note: cUi.metrics.mass.subtitle,
+    },
+    distanceKm: {
+      title: cUi.metrics.distance.title,
+      unit: cUi.metrics.distance.unit,
+      maxVal: 50,
+      note: cUi.metrics.distance.subtitle,
+    },
+    actualSol: {
+      title: cUi.metrics.sol.title,
+      unit: cUi.metrics.sol.unit,
+      maxVal: 5500,
+      note: cUi.metrics.sol.subtitle,
+    },
+    powerCapacityWatts: {
+      title: cUi.metrics.power.title,
+      unit: cUi.metrics.power.unit,
+      maxVal: 160,
+      note: cUi.metrics.power.subtitle,
+    },
+  };
+
   const [selectedIds, setSelectedIds] = useState<RoverId[]>([
     'spirit',
     'opportunity',
@@ -61,11 +66,11 @@ export function RoverComparisonSection() {
     });
   };
 
-  const selectedProfiles = ROVER_COMPARISON_PROFILES.filter((profile) =>
+  const selectedProfiles = comparisonProfiles.filter((profile) =>
     selectedIds.includes(profile.roverId)
   );
 
-  const chartMeta = CHART_METRIC_META[activeChartMetric];
+  const chartMeta = chartMetricMeta[activeChartMetric];
 
   return (
     <section
@@ -82,29 +87,27 @@ export function RoverComparisonSection() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
           <span className="exploration-section__eyebrow">
-            KARŞILAŞTIRMALI TELEMETRİ ANALİZİ · 05
+            {cUi.eyebrow}
           </span>
           <h2 id="rover-comparison-heading" className="exploration-section__title">
-            ROVER KARŞILAŞTIRMA LABORATUVARI
+            {cUi.title}
           </h2>
           <p className="exploration-section__subtitle">
-            Kütle, Güç, İşlemci, Mesafe ve Bilimsel Yüklerin Yan Yana Karşılaştırması
+            {cUi.subtitle}
           </p>
           <p className="exploration-section__lead">
-            Karşılaştırmak istediğiniz Mars keşif araçlarını seçin. Tüm veriler resmi NASA/JPL
-            görev belgelerinden alınmış olup ölçüm birimleri ve görev koşulları (güneş enerjisi
-            vs. nükleer MMRTG, tamamlanmış vs. devam eden görev) açıkça belirtilmiştir.
+            {cUi.description}
           </p>
         </motion.div>
 
         {/* Rover Selection & Preset Bar */}
-        <div className="comparison-selector-bar" role="region" aria-label="Karşılaştırılacak araç seçimi">
+        <div className="comparison-selector-bar" role="region" aria-label={cUi.title}>
           <div className="comparison-selector-bar__rovers">
             <span className="comparison-selector-bar__label">
-              KARŞILAŞTIRILAN ARAÇLAR (EN AZ 2 SEÇİN):
+              {lang === 'en' ? 'ROVERS TO COMPARE (SELECT AT LEAST 2):' : 'KARŞILAŞTIRILAN ARAÇLAR (EN AZ 2 SEÇİN):'}
             </span>
             <div className="comparison-check-group">
-              {ROVER_COMPARISON_PROFILES.map((profile) => {
+              {comparisonProfiles.map((profile) => {
                 const isChecked = selectedIds.includes(profile.roverId);
                 return (
                   <button
@@ -143,21 +146,21 @@ export function RoverComparisonSection() {
                 setSelectedIds(['spirit', 'opportunity', 'curiosity', 'perseverance'])
               }
             >
-              4 Aracın Tümü
+              {lang === 'en' ? 'All 4 Rovers' : '4 Aracın Tümü'}
             </button>
             <button
               type="button"
               className="comparison-preset-btn"
               onClick={() => setSelectedIds(['spirit', 'opportunity'])}
             >
-              MER İkizleri (2004)
+              {lang === 'en' ? 'MER Twins (2004)' : 'MER İkizleri (2004)'}
             </button>
             <button
               type="button"
               className="comparison-preset-btn"
               onClick={() => setSelectedIds(['curiosity', 'perseverance'])}
             >
-              Nükleer Laboratuvarlar
+              {lang === 'en' ? 'Nuclear Labs' : 'Nükleer Laboratuvarlar'}
             </button>
           </div>
         </div>
@@ -167,20 +170,20 @@ export function RoverComparisonSection() {
           <div className="comparison-chart-card__header">
             <div>
               <span className="comparison-chart-card__eyebrow">
-                NİCEL PERFORMANS GRAFİĞİ
+                {lang === 'en' ? 'QUANTITATIVE PERFORMANCE CHART' : 'NİCEL PERFORMANS GRAFİĞİ'}
               </span>
               <h3 className="comparison-chart-card__title">
                 {chartMeta.title} ({chartMeta.unit})
               </h3>
             </div>
 
-            <div className="comparison-chart-tabs" role="tablist" aria-label="Grafik ölçütü seçin">
+            <div className="comparison-chart-tabs" role="tablist" aria-label={cUi.metricTabsAria}>
               {(
                 [
-                  { key: 'distanceKm', label: 'Kat Edilen Mesafe (km)' },
-                  { key: 'actualSol', label: 'Görev Süresi (Sol)' },
-                  { key: 'massKg', label: 'Yüzey Kütlesi (kg)' },
-                  { key: 'powerCapacityWatts', label: 'Güç Kapasitesi (W)' },
+                  { key: 'distanceKm', label: `${cUi.metrics.distance.label} (${cUi.metrics.distance.unit})` },
+                  { key: 'actualSol', label: `${cUi.metrics.sol.label} (Sol)` },
+                  { key: 'massKg', label: `${cUi.metrics.mass.label} (${cUi.metrics.mass.unit})` },
+                  { key: 'powerCapacityWatts', label: `${cUi.metrics.power.label} (${cUi.metrics.power.unit})` },
                 ] as const
               ).map((tab) => (
                 <button
@@ -221,10 +224,10 @@ export function RoverComparisonSection() {
                       <small>{profile.generationLabel}</small>
                     </span>
                     <span className="comparison-bar-row__val">
-                      {rawValue.toLocaleString('tr-TR')}
+                      {rawValue.toLocaleString(numLocale)}
                       {isApproxOngoing ? '+' : ''} {chartMeta.unit}
                       {isApproxOngoing && (
-                        <em className="comparison-ongoing-tag">Aktif Görev</em>
+                        <em className="comparison-ongoing-tag">{cUi.ongoingBadge}</em>
                       )}
                     </span>
                   </div>
@@ -242,9 +245,9 @@ export function RoverComparisonSection() {
 
                   {activeChartMetric === 'actualSol' && (
                     <span className="comparison-bar-row__sub">
-                      Planlanan Görev Süresi: {profile.plannedSol} Sol → Gerçekleşen:{' '}
+                      {cUi.plannedPrefix} {profile.plannedSol} Sol → {cUi.actualShort}:{' '}
                       <strong>
-                        {(profile.actualSol / profile.plannedSol).toFixed(1)}× katı
+                        {(profile.actualSol / profile.plannedSol).toFixed(1)}×
                       </strong>
                     </span>
                   )}
@@ -255,12 +258,12 @@ export function RoverComparisonSection() {
         </div>
 
         {/* Side-by-Side Comprehensive Comparison Table */}
-        <div className="comparison-table-wrap" role="region" aria-label="Yan yana rover karşılaştırma tablosu" tabIndex={0}>
+        <div className="comparison-table-wrap" role="region" aria-label={cUi.tableTitle} tabIndex={0}>
           <table className="comparison-table">
             <thead>
               <tr>
                 <th scope="col" className="comparison-table__criteriaCol">
-                  KARŞILAŞTIRMA KRİTERİ & BİRİM
+                  {cUi.tableTitle}
                 </th>
                 {selectedProfiles.map((profile) => (
                   <th
@@ -280,40 +283,40 @@ export function RoverComparisonSection() {
             </thead>
             <tbody>
               <tr>
-                <th scope="row">Kütle (kg)</th>
+                <th scope="row">{cUi.rows.mass}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
-                    <strong>{p.massKg.toLocaleString('tr-TR')} kg</strong>
+                    <strong>{p.massKg.toLocaleString(numLocale)} kg</strong>
                     <small>{p.massNote}</small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Boyutlar (m)</th>
+                <th scope="row">{cUi.rows.dimensions}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <strong>{p.dimensionsText}</strong>
-                    <small>Uzunluk × Genişlik × Yükseklik</small>
+                    <small>{lang === 'en' ? 'Length × Width × Height' : 'Uzunluk × Genişlik × Yükseklik'}</small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Maksimum Hız (cm/sn)</th>
+                <th scope="row">{cUi.rows.maxSpeed}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
-                    <strong>{p.maxSpeedCmPerSec.toLocaleString('tr-TR')} cm/sn</strong>
+                    <strong>{p.maxSpeedCmPerSec.toLocaleString(numLocale)} cm/s</strong>
                     <small>{p.avgSpeedNote}</small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Enerji Kaynağı</th>
+                <th scope="row">{cUi.rows.energy}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>{p.energySource}</td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Güç Kapasitesi (Watt & Wh/Sol)</th>
+                <th scope="row">{cUi.rows.powerWatts}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <strong>~{p.powerCapacityWatts} Watt</strong>
@@ -322,13 +325,13 @@ export function RoverComparisonSection() {
                 ))}
               </tr>
               <tr>
-                <th scope="row">İletişim Sistemi (kbps / Mbps)</th>
+                <th scope="row">{cUi.rows.comms}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>{p.communicationSystem}</td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">İşlemci & Bellek</th>
+                <th scope="row">{cUi.rows.processor}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <strong>{p.processor}</strong>
@@ -337,48 +340,51 @@ export function RoverComparisonSection() {
                 ))}
               </tr>
               <tr>
-                <th scope="row">Görev Süresi (Planlanan / Gerçekleşen Sol)</th>
+                <th scope="row">{cUi.rows.duration}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <strong>
-                      {p.actualSol.toLocaleString('tr-TR')}
-                      {p.isOngoing ? '+ Sol (Aktif)' : ' Sol (Kesin)'}
+                      {p.actualSol.toLocaleString(numLocale)}
+                      {p.isOngoing ? `+ Sol (${cUi.ongoingBadge})` : ` Sol (${cUi.completedBadge})`}
                     </strong>
                     <small>
-                      Planlanan: {p.plannedSol} Sol · {p.actualDurationNote}
+                      {cUi.plannedShort}: {p.plannedSol} Sol · {p.actualDurationNote}
                     </small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Kat Edilen Mesafe (km)</th>
+                <th scope="row">{cUi.rows.distance}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <strong>
-                      {p.distanceKm.toLocaleString('tr-TR')}
-                      {p.isOngoing ? '+ km (Aktif)' : ' km (Kesin)'}
+                      {p.distanceKm.toLocaleString(numLocale)}
+                      {p.isOngoing ? `+ km (${cUi.ongoingBadge})` : ` km (${cUi.completedBadge})`}
                     </strong>
                     <small>{p.distanceNote}</small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Bilimsel Cihazlar</th>
+                <th scope="row">{cUi.rows.instruments}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
-                    <strong>{p.scientificInstrumentCount} Ana Bilimsel Yük</strong>
+                    <strong>
+                      {p.scientificInstrumentCount}{' '}
+                      {lang === 'en' ? 'Primary Instruments' : 'Ana Bilimsel Yük'}
+                    </strong>
                     <small>{p.scientificInstrumentsSummary}</small>
                   </td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Önemli Bilimsel Keşifler</th>
+                <th scope="row">{cUi.rows.discoveries}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>{p.keyDiscoveriesSummary}</td>
                 ))}
               </tr>
               <tr>
-                <th scope="row">Resmi NASA Kaynağı</th>
+                <th scope="row">{cUi.rows.officialSource}</th>
                 {selectedProfiles.map((p) => (
                   <td key={p.roverId}>
                     <a
@@ -387,7 +393,7 @@ export function RoverComparisonSection() {
                       rel="noopener noreferrer"
                       className="comparison-source-link"
                     >
-                      NASA Mission Fact Sheet ↗
+                      {cUi.officialNasaPageLink}
                     </a>
                   </td>
                 ))}

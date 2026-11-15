@@ -9,6 +9,8 @@ export interface CameraConfig {
 /**
  * Top-level foundational application configuration.
  */
+export type Language = 'tr' | 'en';
+
 export interface AppConfig {
   title: string;
   version: string;
@@ -41,6 +43,7 @@ export type SectionId =
   | 'rover-comparison'
   | 'mission-simulation'
   | 'lunar-exploration'
+  | 'spacecraft-quiz'
   | 'references';
 
 /**
@@ -311,7 +314,7 @@ export interface LunarMissionItem {
   code: string;
   agency: string;
   country: string;
-  missionType: 'Yumuşak İniş Aracı (Lander)' | 'Robotik Ay Gezicisi (Rover)' | 'Mürettebatlı Ay Taşıtı (LRV)';
+  missionType: string;
   eraBadge: string;
   launchDate: string;
   landingDate: string;
@@ -323,13 +326,13 @@ export interface LunarMissionItem {
   lat: number;
   /** Selenographic east-positive or standard longitude (-180 to +180). */
   lon: number;
-  hemisphereLabel: 'Yakın Yüz (Near Side)' | 'Uzak Yüz (Far Side)' | 'Güney Kutbu Bölgesi';
+  hemisphereLabel: string;
   markerColor: string;
-  statusLabel: 'TARİHİ GÖREV TAMAMLANDI' | 'AKTİF / UZATILMIŞ GÖREV';
+  statusLabel: string;
   image: string;
   imageAlt: string;
   imageCredit: string;
-  mediaKindLabel: 'Gerçek NASA / Arşiv Fotoğrafı' | 'Teknik Görev & Yüzey Rekonstrüksiyon İllüstrasyonu';
+  mediaKindLabel: string;
   nasaSearchQuery: string;
   nasaArchiveId?: string;
   summary: string;
@@ -380,4 +383,44 @@ export interface ReferenceCategoryGroup {
   code: string;
   title: string;
   subtitle: string;
+}
+
+/**
+ * Option key for the 10-question interactive Spacecraft Quiz.
+ */
+export type QuizOptionKey = 'A' | 'B' | 'C' | 'D';
+
+/**
+ * Single multiple-choice option in a quiz question.
+ */
+export interface QuizOption {
+  key: QuizOptionKey;
+  text: string;
+}
+
+/**
+ * Individual question record in the Spacecraft Quiz.
+ */
+export interface QuizQuestionItem {
+  id: string;
+  questionNumber: number;
+  spacecraftGroupId: string;
+  spacecraftTitle: string;
+  prompt: string;
+  options: readonly QuizOption[];
+  correctOption: QuizOptionKey;
+  explanation: string;
+}
+
+/**
+ * Grouping of 2 questions under a featured spacecraft header.
+ */
+export interface QuizSpacecraftGroup {
+  id: string;
+  groupNumber: number;
+  title: string;
+  subtitle: string;
+  badge: string;
+  accentColor: string;
+  questions: readonly QuizQuestionItem[];
 }

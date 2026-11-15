@@ -75,17 +75,16 @@
 /* ---- Hero-Scoped Interactive Mars Overlay, Hotspot Card & Minimalist HUD ---- */
 
 .mars-hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100dvh;
+  position: static;
   z-index: 6;
+  width: 100%;
+  flex-shrink: 0;
   pointer-events: none;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 0 clamp(0.75rem, 2.5vw, 2rem) 0.7rem;
+  gap: 0.65rem;
+  padding: 0 clamp(0.75rem, 2.5vw, 2rem) 0.85rem;
 }
 
 .mars-hover-pill {
@@ -372,13 +371,14 @@
 
 @media (max-width: 1024px) {
   .mars-hotspot-card {
+    position: relative;
     top: auto;
-    bottom: 5.5rem;
-    right: 1rem;
-    left: 1rem;
+    bottom: auto;
+    right: auto;
+    left: auto;
     margin: 0 auto;
     transform: none;
-    max-height: 44dvh;
+    max-height: none;
   }
 
   .mars-hero-hud {
