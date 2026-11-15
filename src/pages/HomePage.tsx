@@ -9,9 +9,10 @@ import { MarsExplorationSection } from '@/components/home/MarsExplorationSection
 import { MeetExplorersSection } from '@/components/home/MeetExplorersSection';
 import { MarsMapSection } from '@/components/home/MarsMapSection';
 import { MarsPlanet } from '@/components/home/MarsPlanet';
+import { MissionOverviewSection } from '@/components/home/MissionOverviewSection';
 import { MissionSimulationSection } from '@/components/home/MissionSimulationSection';
 import { NasaPhotoArchiveSection } from '@/components/home/NasaPhotoArchiveSection';
-import { ProjectShowcaseSection } from '@/components/home/ProjectShowcaseSection';
+import { ProjectSummaryStrip } from '@/components/home/ProjectSummaryStrip';
 import { ReferencesSection } from '@/components/home/ReferencesSection';
 import { Rover3DLabSection } from '@/components/home/Rover3DLabSection';
 import { RoverComparisonSection } from '@/components/home/RoverComparisonSection';
@@ -44,6 +45,7 @@ export function HomePage() {
   const navItems: ReadonlyArray<{ id: SectionId; label: string }> = useMemo(
     () => [
       { id: 'stories-showcase', label: t.ui.nav.links.stories.toUpperCase() },
+      { id: 'mission-overview', label: lang === 'tr' ? 'GENEL BAKIŞ' : 'OVERVIEW' },
       { id: 'mars-exploration', label: t.ui.nav.links.marsExploration.toUpperCase() },
       { id: 'mars-map', label: t.ui.nav.links.marsMap.toUpperCase() },
       { id: 'nasa-photo-archive', label: t.ui.nav.links.nasaPhotoArchive.toUpperCase() },
@@ -54,7 +56,7 @@ export function HomePage() {
       { id: 'spacecraft-quiz', label: t.ui.nav.links.spacecraftQuiz.toUpperCase() },
       { id: 'references', label: t.ui.nav.links.references.toUpperCase() },
     ],
-    [t]
+    [lang, t]
   );
 
   const activeRover = useMemo(
@@ -304,6 +306,9 @@ export function HomePage() {
         </div>
       </MarsPlanet>
 
+      {/* 1.2. PROJECT SUMMARY — COMPACT 10-SECOND INTRO */}
+      <ProjectSummaryStrip />
+
       {/* 1.5. THE STORIES OF SILENT EXPLORERS — CINEMATIC EXHIBITION */}
       <StoriesShowcaseSection onExploreStory={handleJumpToStory} />
 
@@ -339,7 +344,10 @@ export function HomePage() {
         onSelectLunarMission={setSelectedLunarMission}
       />
       <SpacecraftQuizSection onNavigateToSection={scrollToSection} />
-      <ProjectShowcaseSection onNavigateToSection={scrollToSection} />
+      <MissionOverviewSection
+        onNavigateToSection={scrollToSection}
+        onExploreStory={handleJumpToStory}
+      />
       <ReferencesSection onNavigateToSection={scrollToSection} />
 
       <footer className="home__footer">

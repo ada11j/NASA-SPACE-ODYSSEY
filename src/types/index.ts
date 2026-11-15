@@ -47,6 +47,7 @@ export type SectionId =
   | 'stories-showcase'
   | 'meet-the-explorers'
   | 'explorer-stories'
+  | 'mission-overview'
   | 'project-showcase'
   | 'references';
 
