@@ -61,7 +61,7 @@ export const ROVER_3D_ARCHITECTURES: Record<RoverId, Rover3DArchitecture> = {
         technicalDetails:
           'Instrument Deployment Device (IDD) ucundaki tarette RAT (elmas kaya aşındırma aracı), MI (30 µm/piksel mikroskobik görüntüleyici), Mössbauer Spektrometresi (demir mineralojisi) ve APXS (alfa parçacık X-ışını element spektrometresi) yer alır.',
         specs: '90 cm erişim · 5 eklem · Taret yükü: RAT + MI + MB + APXS',
-        position: [1.32, -0.18, 0.0],
+        position: [1.36, -0.15, -0.05],
       },
       {
         id: 'power',
@@ -149,7 +149,7 @@ export const ROVER_3D_ARCHITECTURES: Record<RoverId, Rover3DArchitecture> = {
         technicalDetails:
           '5 eklemli titanyum-karbon kompozit kol. Ucundaki RAT aşındırıcı ile onlarca sülfat kumtaşını zımparaladı; Mössbauer ve APXS ile jarosit ve smektit killerini doğruladı; Microscopic Imager (MI) ile milimetrik su dalgası çapraz tabakalanmalarını görüntüledi.',
         specs: '5 serbestlik derecesi · 30 µm/piksel MI · 45 mm RAT aşındırma çapı',
-        position: [1.32, -0.18, 0.0],
+        position: [1.36, -0.15, -0.05],
       },
       {
         id: 'power',
@@ -237,7 +237,7 @@ export const ROVER_3D_ARCHITECTURES: Record<RoverId, Rover3DArchitecture> = {
         technicalDetails:
           '2,1 metre uzanabilen 5 eklemli kolun ucunda 60 cm çaplı, 30 kg ağırlığında dev bir taret bulunur. Tarette döner-darbeli kaya matkabı (1,6 cm çap, 5 cm derinlik), toz işleme ünitesi (CHIMRA), DRT tel fırçası, 14 µm/piksel MAHLI renkli makro kamerası ve APXS yer alır.',
         specs: '2,1 m erişim · 30 kg taret · Darbeli matkap + MAHLI + APXS + CHIMRA',
-        position: [1.55, -0.15, 0.0],
+        position: [1.82, -0.14, -0.06],
       },
       {
         id: 'power',
@@ -325,7 +325,7 @@ export const ROVER_3D_ARCHITECTURES: Record<RoverId, Rover3DArchitecture> = {
         technicalDetails:
           'Kayayı toz haline getirmek yerine tebeşir büyüklüğünde (13 mm × 60 mm) sağlam kaya karotları kesip doğrudan titanyum tüplere dolduran döner-darbeli matkap taşır. SHERLOC & WATSON kamerası ile PIXL cihazı, "Cheyava Falls" kayasındaki organik karbonu ve leopar benekli reaksiyon halkalarını bu taretle keşfetmiştir.',
         specs: '45 kg taret · SHERLOC (Derin UV Raman) + PIXL (120 µm XRF) + Karot Matkabı',
-        position: [1.55, -0.15, 0.0],
+        position: [1.82, -0.14, -0.06],
       },
       {
         id: 'power',

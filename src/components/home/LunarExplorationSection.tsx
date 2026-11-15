@@ -311,6 +311,14 @@ export function LunarExplorationSection({
                       alt={mission.imageAlt}
                       className="rover-card__image"
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        const svgFallback = `/assets/images/lunar/${mission.id}.svg`;
+                        if (!target.dataset.fallbackApplied && !target.src.endsWith(svgFallback)) {
+                          target.dataset.fallbackApplied = 'true';
+                          target.src = svgFallback;
+                        }
+                      }}
                     />
                     <div className="rover-card__badges">
                       <span
@@ -350,7 +358,7 @@ export function LunarExplorationSection({
 
                     <div className="rover-card__footer">
                       <p className="rover-card__credit">
-                        [{mission.mediaKindLabel}] · {mission.sourceLabel}
+                        [{mission.mediaKindLabel}] · {mission.imageCredit}
                       </p>
                       <span className="rover-card__cta">
                         <span>DETAYLARI İNCELE</span>

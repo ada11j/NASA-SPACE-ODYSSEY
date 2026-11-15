@@ -236,7 +236,14 @@ export function LunarMissionDetailView({
                 alt={livePhoto ? livePhoto.title : mission.imageAlt}
                 className="rover-detail__image"
                 onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src = mission.image;
+                  const target = e.currentTarget;
+                  const svgFallback = `/assets/images/lunar/${mission.id}.svg`;
+                  if (livePhoto && !target.src.endsWith(mission.image)) {
+                    target.src = mission.image;
+                  } else if (!target.dataset.fallbackApplied && !target.src.endsWith(svgFallback)) {
+                    target.dataset.fallbackApplied = 'true';
+                    target.src = svgFallback;
+                  }
                 }}
               />
             </div>
